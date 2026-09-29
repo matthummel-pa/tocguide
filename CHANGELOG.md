@@ -3,6 +3,12 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.4] - 2026-09-29
+
+### Added
+- A close button hides the outline. Show outline brings it back for that visit.
+- Focused reading is an optional Focus control. It dims the rest of the page and keeps the section in view clear.
+
 ## [1.6.3] - 2026-09-23
 
 ### Changed

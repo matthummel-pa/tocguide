@@ -113,7 +113,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 				<h2><?php esc_html_e( 'Shortcode', 'tocguide' ); ?></h2>
 				<p><?php esc_html_e( 'Use this in classic content, page-builder text widgets, or a theme template (via do_shortcode):', 'tocguide' ); ?></p>
 				<p><code>[tocguide]</code></p>
-				<p><?php esc_html_e( 'Layout &amp; behavior:', 'tocguide' ); ?> <code>title</code>, <code>showtitle</code>, <code>titletag</code>, <code>h1</code>&ndash;<code>h6</code>, <code>ordered</code>, <code>numbering</code>, <code>markers</code>, <code>collapsible</code>, <code>collapsed</code>, <code>sticky</code>, <code>compact</code>, <code>columns</code>, <code>underline</code>, <code>highlight</code>, <code>maxheight</code>, <code>min</code>, <code>smooth</code>, <code>style</code>, <code>theme="exclude|include"</code></p>
+				<p><?php esc_html_e( 'Layout &amp; behavior:', 'tocguide' ); ?> <code>title</code>, <code>showtitle</code>, <code>titletag</code>, <code>h1</code>&ndash;<code>h6</code>, <code>ordered</code>, <code>numbering</code>, <code>markers</code>, <code>collapsible</code>, <code>collapsed</code>, <code>close="0"</code>, <code>focus="1"</code>, <code>sticky</code>, <code>compact</code>, <code>columns</code>, <code>underline</code>, <code>highlight</code>, <code>maxheight</code>, <code>min</code>, <code>smooth</code>, <code>style</code>, <code>theme="exclude|include"</code></p>
 			<p><?php esc_html_e( 'Reading Guide:', 'tocguide' ); ?> <code>preview="1"</code> <?php esc_html_e( '(hover tooltip)', 'tocguide' ); ?>, <code>guide="1"</code> <?php esc_html_e( '(full guide mode)', 'tocguide' ); ?>, <code>previews="1"</code>, <code>density="1"</code>, <code>readtime="1"</code>, <code>progress="1"</code>, <code>reactions="1"</code>, <code>citations="1"</code>, <code>citation="apa|mla|chicago|harvard|plain"</code></p>
 			<p><?php esc_html_e( 'Study tools:', 'tocguide' ); ?> <code>rprogress="1"</code> <?php esc_html_e( '(reading progress bar)', 'tocguide' ); ?>, <code>bookmark="1"</code> <?php esc_html_e( '(resume reading)', 'tocguide' ); ?>, <code>rnotes="1"</code> <?php esc_html_e( '(reader note pads per section)', 'tocguide' ); ?></p>
 			<p><?php esc_html_e( 'Export &amp; print:', 'tocguide' ); ?> <code>export="1"</code> <?php esc_html_e( '(adds Copy / .md / .doc / Print buttons)', 'tocguide' ); ?></p>
@@ -421,6 +421,14 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 								<label>
 									<input type="checkbox" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_collapsed]" value="1" <?php checked( $settings['auto_collapsed'], 1 ); ?>>
 									<?php esc_html_e( 'Start collapsed', 'tocguide' ); ?>
+								</label><br>
+								<label>
+									<input type="checkbox" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_show_close]" value="1" <?php checked( $settings['auto_show_close'], 1 ); ?>>
+									<?php esc_html_e( 'Close button (hides the outline; Show outline brings it back)', 'tocguide' ); ?>
+								</label><br>
+								<label>
+									<input type="checkbox" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_focus_mode]" value="1" <?php checked( $settings['auto_focus_mode'], 1 ); ?>>
+									<?php esc_html_e( 'Focused reading (a Focus control dims every section except the one in view)', 'tocguide' ); ?>
 								</label>
 							</fieldset>
 						</td>

@@ -472,6 +472,8 @@ class TOCguide_Headings {
 			'print'    => '<path d="M7 9V4.75h10V9"/><path d="M7 16.25H5.6A1.6 1.6 0 0 1 4 14.65v-3.9A1.6 1.6 0 0 1 5.6 9.15h12.8A1.6 1.6 0 0 1 20 10.75v3.9a1.6 1.6 0 0 1-1.6 1.6H17"/><path d="M7 14.25h10v5.5H7z"/>',
 			'resume'   => '<path d="M9 14.25 4.75 10 9 5.75"/><path d="M5.25 10h8.1a4.75 4.75 0 1 1 0 9.5H12"/>',
 			'chevron'  => '<path d="m6 9 6 6 6-6"/>',
+			'close'    => '<path d="M6 6 18 18"/><path d="M18 6 6 18"/>',
+			'focus'    => '<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5"/><path d="M12 18.5V21"/><path d="M3 12h2.5"/><path d="M18.5 12H21"/>',
 		);
 
 		if ( ! isset( $paths[ $name ] ) ) {
@@ -887,6 +889,14 @@ class TOCguide_Headings {
 		if ( ! empty( $attributes['collapsedDefault'] ) ) {
 			$classes[] = 'is-collapsed';
 		}
+		$show_close = ! array_key_exists( 'showClose', $attributes ) || ! empty( $attributes['showClose'] );
+		$focus_mode = ! empty( $attributes['focusMode'] );
+		if ( $show_close ) {
+			$classes[] = 'has-close';
+		}
+		if ( $focus_mode ) {
+			$classes[] = 'has-focus-mode';
+		}
 		if ( ! empty( $attributes['sticky'] ) ) {
 			$classes[] = 'is-sticky';
 		}
@@ -984,7 +994,9 @@ class TOCguide_Headings {
 		// data-tocguide-post is needed by any feature that uses localStorage.
 		$needs_post_id = ! empty( $attributes['guideMode'] )
 			|| ! empty( $attributes['showBookmark'] )
-			|| ! empty( $attributes['showReaderNotes'] );
+			|| ! empty( $attributes['showReaderNotes'] )
+			|| $show_close
+			|| $focus_mode;
 		if ( $needs_post_id ) {
 			$guide_attrs['data-tocguide-post'] = (string) $post_id;
 		}
@@ -1044,12 +1056,20 @@ class TOCguide_Headings {
 		// Hidden live region — picks up copy-to-clipboard and other state changes.
 		$html .= '<span class="tocguide__live-region tocguide__visually-hidden" aria-live="polite" aria-atomic="true"></span>';
 
-		if ( $show_title || ! empty( $attributes['collapsible'] ) ) {
+		$show_header = $show_title || ! empty( $attributes['collapsible'] ) || $show_close || $focus_mode;
+		if ( $show_header ) {
 			$html .= '<div class="tocguide__header">';
 			if ( $show_title ) {
 				$html .= '<' . $title_tag . ' class="tocguide__title">' . esc_html( $title_text ) . '</' . $title_tag . '>';
-			} elseif ( ! empty( $attributes['collapsible'] ) ) {
+			} else {
 				$html .= '<span class="tocguide__title tocguide__visually-hidden">' . esc_html( $label ) . '</span>';
+			}
+			$html .= '<div class="tocguide__header-actions">';
+			if ( $focus_mode ) {
+				$html .= '<button type="button" class="tocguide__focus" aria-pressed="false" aria-label="' . esc_attr__( 'Focused reading', 'tocguide' ) . '">';
+				$html .= self::icon_svg( 'focus' );
+				$html .= '<span>' . esc_html__( 'Focus', 'tocguide' ) . '</span>';
+				$html .= '</button>';
 			}
 			if ( ! empty( $attributes['collapsible'] ) ) {
 				$expanded = empty( $attributes['collapsedDefault'] ) ? 'true' : 'false';
@@ -1058,7 +1078,15 @@ class TOCguide_Headings {
 				$html    .= '<span class="tocguide__toggle-icon" aria-hidden="true">' . self::icon_svg( 'chevron' ) . '</span>';
 				$html    .= '</button>';
 			}
-			$html .= '</div>';
+			if ( $show_close ) {
+				$html .= '<button type="button" class="tocguide__close" aria-label="' . esc_attr__( 'Close table of contents', 'tocguide' ) . '">';
+				$html .= self::icon_svg( 'close' );
+				$html .= '</button>';
+			}
+			$html .= '</div></div>';
+		}
+		if ( $show_close ) {
+			$html .= '<button type="button" class="tocguide__restore" hidden>' . esc_html__( 'Show outline', 'tocguide' ) . '</button>';
 		}
 
 		// ── Study tools bar (total time + resume button) ─────────────────────

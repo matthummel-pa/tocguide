@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,8 @@ TOCguide adds a Table of Contents block to the WordPress block editor. It is an 
 * Show or hide the title; render it as a paragraph or H2–H4
 * Smooth scroll with a configurable offset for sticky headers
 * Collapsible outline and optional sticky positioning
+* Close button hides the outline for the visit; Show outline brings it back
+* Optional Focus control dims every section except the one in view
 * Scroll-spy highlights the section currently in view
 * Hide bullets, two-column layout, compact spacing, max height with scroll
 * Auto-generate the block sitewide (top of content or after first heading)
@@ -212,6 +214,10 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 4. Docs & Support tab in wp-admin (links to the documentation site).
 
 == Changelog ==
+
+= 1.6.4 =
+* A close button hides the outline. Show outline brings it back for that visit.
+* Focused reading is optional. The Focus control dims the rest of the page and keeps the section in view clear.
 
 = 1.6.3 =
 * The outline has default space above and below it. A margin set on the block still replaces that default.

@@ -53,6 +53,280 @@ const initToggle = ( nav ) => {
 	} );
 };
 
+// ── Close (hide the outline for this visit) ──────────────────────────────────
+
+const visitKey = ( nav, kind ) => {
+	const post =
+		nav.getAttribute( 'data-tocguide-post' ) || window.location.pathname;
+	const instance = nav.dataset.tocguideInstance || '0';
+	return `tocguide-${ kind }:${ post }:${ instance }`;
+};
+
+const remember = ( key, value ) => {
+	try {
+		if ( value ) {
+			window.sessionStorage.setItem( key, '1' );
+		} else {
+			window.sessionStorage.removeItem( key );
+		}
+	} catch {
+		// sessionStorage may be blocked.
+	}
+};
+
+const remembered = ( key ) => {
+	try {
+		return window.sessionStorage.getItem( key ) === '1';
+	} catch {
+		return false;
+	}
+};
+
+const initClose = ( nav ) => {
+	const button = nav.querySelector( '.tocguide__close' );
+	const restore = nav.querySelector( '.tocguide__restore' );
+	if ( ! button || ! restore ) {
+		return;
+	}
+	const key = visitKey( nav, 'closed' );
+
+	const dismiss = ( persist ) => {
+		nav.classList.add( 'is-dismissed' );
+		restore.removeAttribute( 'hidden' );
+		if ( persist ) {
+			remember( key, true );
+			announce( nav, 'Table of contents hidden.' );
+			restore.focus();
+		}
+	};
+
+	const show = () => {
+		nav.classList.remove( 'is-dismissed' );
+		restore.setAttribute( 'hidden', '' );
+		remember( key, false );
+		announce( nav, 'Table of contents shown.' );
+		button.focus();
+	};
+
+	if ( remembered( key ) ) {
+		dismiss( false );
+	}
+
+	button.addEventListener( 'click', () => dismiss( true ) );
+	restore.addEventListener( 'click', show );
+};
+
+// ── Focused reading (dim every section except the one in view) ───────────────
+
+let focusNav = null;
+let focusFrame = 0;
+let focusListening = false;
+
+const trackedHeadings = ( nav ) =>
+	Array.from( nav.querySelectorAll( '.tocguide__link[href^="#"]' ) )
+		.map( ( link ) => {
+			const id = decodeURIComponent(
+				( link.getAttribute( 'href' ) || '' ).slice( 1 )
+			);
+			return id ? document.getElementById( id ) : null;
+		} )
+		.filter( Boolean );
+
+const contentRootOf = ( headings ) => {
+	const selectors = [
+		'.entry-content',
+		'.wp-block-post-content',
+		'.post-content',
+		'article',
+		'main',
+	];
+	for ( let i = 0; i < selectors.length; i++ ) {
+		const roots = document.querySelectorAll( selectors[ i ] );
+		for ( let r = 0; r < roots.length; r++ ) {
+			const root = roots[ r ];
+			if ( headings.every( ( heading ) => root.contains( heading ) ) ) {
+				return root;
+			}
+		}
+	}
+	return headings[ 0 ] ? headings[ 0 ].parentElement : null;
+};
+
+const topChild = ( root, el ) => {
+	let node = el;
+	while ( node && node.parentElement !== root ) {
+		node = node.parentElement;
+	}
+	return node;
+};
+
+const exactToc = ( node ) =>
+	!! node &&
+	( node.classList.contains( 'wp-block-tocguide-table-of-contents' ) ||
+		( node.tagName === 'NAV' && node.classList.contains( 'tocguide' ) ) );
+
+const containsToc = ( node ) =>
+	exactToc( node ) ||
+	!! node.querySelector?.(
+		'nav.tocguide, .wp-block-tocguide-table-of-contents'
+	);
+
+const clearFocusMarks = () => {
+	document
+		.querySelectorAll( '.tocguide-focus-dim, .tocguide-focus-section' )
+		.forEach( ( el ) => {
+			el.classList.remove(
+				'tocguide-focus-dim',
+				'tocguide-focus-section'
+			);
+		} );
+};
+
+const pickHeading = ( nav, headings ) => {
+	const line = offsetOf( nav ) + 8;
+	let current = headings[ 0 ];
+	headings.forEach( ( heading ) => {
+		if ( heading.getBoundingClientRect().top - line <= 0 ) {
+			current = heading;
+		}
+	} );
+	return current;
+};
+
+const paintFocus = () => {
+	clearFocusMarks();
+	if (
+		! focusNav ||
+		! document.documentElement.classList.contains( 'tocguide-is-focusing' )
+	) {
+		return;
+	}
+	const headings = trackedHeadings( focusNav );
+	if ( ! headings.length ) {
+		return;
+	}
+	const root = contentRootOf( headings );
+	const active = pickHeading( focusNav, headings );
+	if ( ! root || ! active ) {
+		return;
+	}
+	const start = topChild( root, active );
+	const next = headings[ headings.indexOf( active ) + 1 ];
+	const end = next ? topChild( root, next ) : null;
+	if ( ! start ) {
+		return;
+	}
+
+	const bright = new Set();
+	if ( ! end || start === end ) {
+		bright.add( start );
+	} else {
+		let node = start;
+		while ( node && node !== end ) {
+			bright.add( node );
+			node = node.nextElementSibling;
+		}
+	}
+
+	const dimNode = ( node ) => {
+		if ( ! node || node.nodeType !== 1 ) {
+			return;
+		}
+		if (
+			node.tagName === 'SCRIPT' ||
+			node.tagName === 'STYLE' ||
+			exactToc( node )
+		) {
+			return;
+		}
+		if ( bright.has( node ) ) {
+			node.classList.add( 'tocguide-focus-section' );
+			return;
+		}
+		const holdsBright = Array.from( bright ).some( ( el ) =>
+			node.contains( el )
+		);
+		if ( holdsBright || containsToc( node ) ) {
+			Array.from( node.children ).forEach( dimNode );
+			return;
+		}
+		node.classList.add( 'tocguide-focus-dim' );
+	};
+
+	Array.from( root.children ).forEach( dimNode );
+};
+
+const scheduleFocusPaint = () => {
+	if ( focusFrame ) {
+		return;
+	}
+	focusFrame = window.requestAnimationFrame( () => {
+		focusFrame = 0;
+		paintFocus();
+	} );
+};
+
+const listenForFocusScroll = () => {
+	if ( focusListening ) {
+		return;
+	}
+	focusListening = true;
+	window.addEventListener( 'scroll', scheduleFocusPaint, { passive: true } );
+	window.addEventListener( 'resize', scheduleFocusPaint );
+};
+
+const setFocusPressed = ( on ) => {
+	document.querySelectorAll( '.tocguide__focus' ).forEach( ( btn ) => {
+		btn.setAttribute( 'aria-pressed', on ? 'true' : 'false' );
+	} );
+};
+
+const initFocus = ( nav ) => {
+	const button = nav.querySelector( '.tocguide__focus' );
+	if ( ! button ) {
+		return;
+	}
+	const key = visitKey( nav, 'focus' );
+
+	const enable = ( persist ) => {
+		focusNav = nav;
+		document.documentElement.classList.add( 'tocguide-is-focusing' );
+		setFocusPressed( true );
+		listenForFocusScroll();
+		if ( persist ) {
+			remember( key, true );
+			announce( nav, 'Focused reading on.' );
+		}
+		paintFocus();
+	};
+
+	const disable = ( persist ) => {
+		document.documentElement.classList.remove( 'tocguide-is-focusing' );
+		setFocusPressed( false );
+		clearFocusMarks();
+		if ( focusNav === nav ) {
+			focusNav = null;
+		}
+		if ( persist ) {
+			remember( key, false );
+			announce( nav, 'Focused reading off.' );
+		}
+	};
+
+	button.addEventListener( 'click', () => {
+		const on = button.getAttribute( 'aria-pressed' ) === 'true';
+		if ( on ) {
+			disable( true );
+		} else {
+			enable( true );
+		}
+	} );
+
+	if ( remembered( key ) && ! focusNav ) {
+		enable( false );
+	}
+};
+
 // ── Smooth scroll ─────────────────────────────────────────────────────────────
 
 const initSmoothScroll = ( nav ) => {
@@ -950,12 +1224,20 @@ const initExport = ( nav ) => {
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 
+let navInstance = 0;
+
 const initNav = ( nav ) => {
 	if ( nav.dataset.tocguideReady ) {
 		return;
 	}
 	nav.dataset.tocguideReady = '1';
+	if ( ! nav.dataset.tocguideInstance ) {
+		nav.dataset.tocguideInstance = String( navInstance );
+		navInstance += 1;
+	}
 	initToggle( nav );
+	initClose( nav );
+	initFocus( nav );
 	initSmoothScroll( nav );
 	initScrollSpy( nav );
 

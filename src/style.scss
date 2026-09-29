@@ -30,6 +30,15 @@
 	margin: 0 0 0.65rem;
 }
 
+.wp-block-tocguide-table-of-contents .tocguide__header-actions,
+.tocguide .tocguide__header-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin-inline-start: auto;
+	flex-shrink: 0;
+}
+
 .wp-block-tocguide-table-of-contents .tocguide__title,
 .tocguide .tocguide__title {
 	margin: 0 0 0.65rem;
@@ -47,25 +56,63 @@
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__toggle,
-.tocguide .tocguide__toggle {
+.wp-block-tocguide-table-of-contents .tocguide__close,
+.wp-block-tocguide-table-of-contents .tocguide__focus,
+.wp-block-tocguide-table-of-contents .tocguide__restore,
+.tocguide .tocguide__toggle,
+.tocguide .tocguide__close,
+.tocguide .tocguide__focus,
+.tocguide .tocguide__restore {
 	appearance: none;
 	border: 1px solid color-mix(in srgb, var(--tocguide-icon-color, var(--tocguide-accent)) 32%, transparent);
 	background: color-mix(in srgb, var(--tocguide-icon-color, var(--tocguide-accent)) 8%, transparent);
 	color: var(--tocguide-icon-color, var(--tocguide-accent));
 	border-radius: 999px;
-	width: 2rem;
-	height: 2rem;
-	padding: 0;
+	font-family: inherit;
+	font-size: 0.8rem;
+	font-weight: 700;
+	line-height: 1;
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
-	transition: background 0.15s ease, border-color 0.15s ease;
+	transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.wp-block-tocguide-table-of-contents .tocguide__toggle,
+.wp-block-tocguide-table-of-contents .tocguide__close,
+.tocguide .tocguide__toggle,
+.tocguide .tocguide__close {
+	width: 2rem;
+	height: 2rem;
+	padding: 0;
+}
+
+.wp-block-tocguide-table-of-contents .tocguide__focus,
+.wp-block-tocguide-table-of-contents .tocguide__restore,
+.tocguide .tocguide__focus,
+.tocguide .tocguide__restore {
+	gap: 0.35rem;
+	height: 2rem;
+	padding: 0 0.75rem;
+}
+
+.wp-block-tocguide-table-of-contents .tocguide__restore[hidden],
+.tocguide .tocguide__restore[hidden] {
+	display: none;
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__toggle:hover,
-.tocguide .tocguide__toggle:hover {
+.wp-block-tocguide-table-of-contents .tocguide__close:hover,
+.wp-block-tocguide-table-of-contents .tocguide__focus:hover,
+.wp-block-tocguide-table-of-contents .tocguide__restore:hover,
+.wp-block-tocguide-table-of-contents .tocguide__focus[aria-pressed="true"],
+.tocguide .tocguide__toggle:hover,
+.tocguide .tocguide__close:hover,
+.tocguide .tocguide__focus:hover,
+.tocguide .tocguide__restore:hover,
+.tocguide .tocguide__focus[aria-pressed="true"] {
 	background: var(--tocguide-icon-color, var(--tocguide-accent));
 	border-color: transparent;
 	color: #fff;
@@ -96,6 +143,19 @@
 .wp-block-tocguide-table-of-contents.is-collapsed .tocguide__header,
 .tocguide.is-collapsed .tocguide__header {
 	margin-bottom: 0;
+}
+
+.wp-block-tocguide-table-of-contents.is-dismissed,
+.tocguide.is-dismissed {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+.wp-block-tocguide-table-of-contents.is-dismissed > :not(.tocguide__restore),
+.tocguide.is-dismissed > :not(.tocguide__restore) {
+	display: none;
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__list,
@@ -970,8 +1030,18 @@
 		display: block;
 	}
 
-	// Hide all interactive controls.
+	// A closed outline still prints.
+	.wp-block-tocguide-table-of-contents.is-dismissed .tocguide__header,
+	.wp-block-tocguide-table-of-contents.is-dismissed .tocguide__body,
+	.tocguide.is-dismissed .tocguide__header,
+	.tocguide.is-dismissed .tocguide__body {
+		display: block;
+	}
+
 	.wp-block-tocguide-table-of-contents .tocguide__toggle,
+	.wp-block-tocguide-table-of-contents .tocguide__close,
+	.wp-block-tocguide-table-of-contents .tocguide__focus,
+	.wp-block-tocguide-table-of-contents .tocguide__restore,
 	.wp-block-tocguide-table-of-contents .tocguide__reaction,
 	.wp-block-tocguide-table-of-contents .tocguide__cite-btn,
 	.wp-block-tocguide-table-of-contents .tocguide__note-toggle,
@@ -982,6 +1052,9 @@
 	.wp-block-tocguide-table-of-contents .tocguide__rnote-toggle,
 	.wp-block-tocguide-table-of-contents .tocguide__rnote-pad,
 	.tocguide .tocguide__toggle,
+	.tocguide .tocguide__close,
+	.tocguide .tocguide__focus,
+	.tocguide .tocguide__restore,
 	.tocguide .tocguide__reaction,
 	.tocguide .tocguide__cite-btn,
 	.tocguide .tocguide__note-toggle,
@@ -1066,4 +1139,23 @@
 	content: none !important; /* stylelint-disable-line declaration-no-important */
 	background: none !important; /* stylelint-disable-line declaration-no-important */
 	background-image: none !important; /* stylelint-disable-line declaration-no-important */
+}
+
+html.tocguide-is-focusing .tocguide-focus-dim {
+	opacity: 0.38;
+	transition: opacity 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	html.tocguide-is-focusing .tocguide-focus-dim {
+		transition: none;
+	}
+}
+
+@media print {
+
+	html.tocguide-is-focusing .tocguide-focus-dim {
+		opacity: 1;
+	}
 }

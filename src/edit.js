@@ -199,6 +199,41 @@ function PreviewList( {
 	return renderItems( tree, 0, '' );
 }
 
+const Glyph = ( { children } ) => (
+	<svg
+		className="tocguide__svg"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		width="16"
+		height="16"
+		fill="none"
+		stroke="currentColor"
+		strokeWidth="1.75"
+		strokeLinecap="round"
+		aria-hidden="true"
+		focusable="false"
+	>
+		{ children }
+	</svg>
+);
+
+const CloseGlyph = () => (
+	<Glyph>
+		<path d="M6 6 18 18" />
+		<path d="M18 6 6 18" />
+	</Glyph>
+);
+
+const FocusGlyph = () => (
+	<Glyph>
+		<circle cx="12" cy="12" r="3" />
+		<path d="M12 3v2.5" />
+		<path d="M12 18.5V21" />
+		<path d="M3 12h2.5" />
+		<path d="M18.5 12H21" />
+	</Glyph>
+);
+
 export default function Edit( { attributes, setAttributes } ) {
 	const {
 		title,
@@ -216,6 +251,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		excludeThemeStyles,
 		collapsible,
 		collapsedDefault,
+		showClose,
+		focusMode,
 		sticky,
 		compact,
 		twoColumns,
@@ -599,6 +636,30 @@ export default function Edit( { attributes, setAttributes } ) {
 					) }
 					<ToggleControl
 						__nextHasNoMarginBottom
+						label={ __( 'Close button', 'tocguide' ) }
+						checked={ showClose !== false }
+						onChange={ ( value ) =>
+							setAttributes( { showClose: value } )
+						}
+						help={ __(
+							'Readers can hide the outline. Show outline brings it back for that visit.',
+							'tocguide'
+						) }
+					/>
+					<ToggleControl
+						__nextHasNoMarginBottom
+						label={ __( 'Focused reading', 'tocguide' ) }
+						checked={ !! focusMode }
+						onChange={ ( value ) =>
+							setAttributes( { focusMode: value } )
+						}
+						help={ __(
+							'Adds a Focus control. Turning it on dims the rest of the page and keeps the section in view clear.',
+							'tocguide'
+						) }
+					/>
+					<ToggleControl
+						__nextHasNoMarginBottom
 						label={ __(
 							'Highlight the section in view',
 							'tocguide'
@@ -971,17 +1032,37 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 
 			<nav { ...blockProps }>
-				<RichText
-					tagName={ TitleTag }
-					className="tocguide__title"
-					identifier="title"
-					value={ title }
-					onChange={ ( value ) => setAttributes( { title: value } ) }
-					placeholder={ __( 'Table of Contents', 'tocguide' ) }
-					allowedFormats={ [] }
-					withoutInteractiveFormatting
-					style={ showTitle ? undefined : { opacity: 0.45 } }
-				/>
+				<div className="tocguide__header">
+					<RichText
+						tagName={ TitleTag }
+						className="tocguide__title"
+						identifier="title"
+						value={ title }
+						onChange={ ( value ) =>
+							setAttributes( { title: value } )
+						}
+						placeholder={ __( 'Table of Contents', 'tocguide' ) }
+						allowedFormats={ [] }
+						withoutInteractiveFormatting
+						style={ showTitle ? undefined : { opacity: 0.45 } }
+					/>
+					<div
+						className="tocguide__header-actions"
+						aria-hidden="true"
+					>
+						{ !! focusMode && (
+							<span className="tocguide__focus">
+								<FocusGlyph />
+								<span>{ __( 'Focus', 'tocguide' ) }</span>
+							</span>
+						) }
+						{ showClose !== false && (
+							<span className="tocguide__close">
+								<CloseGlyph />
+							</span>
+						) }
+					</div>
+				</div>
 				<Disabled>
 					<div className="tocguide__body">
 						{ items.length ? (
