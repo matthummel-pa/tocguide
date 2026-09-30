@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.5
+Stable tag: 1.6.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -215,6 +215,11 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 4. Docs & Support tab in wp-admin (links to the documentation site).
 
 == Changelog ==
+
+= 1.6.6 =
+* Outline text, title, markers, and header buttons scale with the width of the outline box.
+* On the left-edge panel, that narrower box uses smaller type and controls, with tighter padding so the rows stay on one line.
+* On small screens the outline padding tightens, and two columns stack when the outline itself is narrow.
 
 = 1.6.5 =
 * Settings → Auto-insert → Position includes Fixed left. On wide screens the outline docks to the left edge and the article starts beside it.

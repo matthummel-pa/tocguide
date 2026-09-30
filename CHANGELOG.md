@@ -3,6 +3,13 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.6] - 2026-09-30
+
+### Changed
+- Outline text, the title, markers, gaps, and header buttons scale with the width of the outline box.
+- On the left-edge panel, that narrower box uses smaller type and controls, with tighter padding so the rows stay on one line.
+- On small screens the outline padding tightens. Two columns stack when the outline itself is narrow, including in a sidebar on a wide page.
+
 ## [1.6.5] - 2026-09-30
 
 ### Changed
