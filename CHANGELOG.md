@@ -3,6 +3,12 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.7] - 2026-09-30
+
+### Changed
+- On tablet and desktop, a top-of-content outline uses slightly smaller type, markers, and padding so the article keeps more of the screen.
+- Open, close, and Focus are smaller, with more space between them. The left-edge panel is unchanged.
+
 ## [1.6.6] - 2026-09-30
 
 ### Changed

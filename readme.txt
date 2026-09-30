@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.6
+Stable tag: 1.6.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -215,6 +215,10 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 4. Docs & Support tab in wp-admin (links to the documentation site).
 
 == Changelog ==
+
+= 1.6.7 =
+* On tablet and desktop, a top-of-content outline uses slightly smaller type, markers, and padding so the article keeps more of the screen.
+* Open, close, and Focus are smaller, with more space between them.
 
 = 1.6.6 =
 * Outline text, title, markers, and header buttons scale with the width of the outline box.

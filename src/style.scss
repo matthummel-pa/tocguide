@@ -429,6 +429,62 @@
 	}
 }
 
+/* Top-of-content outlines on tablet and desktop stay compact so the
+   article keeps more of the screen. Open, close, and Focus are smaller,
+   with a wider gap between them. The left-edge panel is unchanged. */
+@media (min-width: 768px) {
+
+	.wp-block-tocguide-table-of-contents:not(.is-docked):not(.is-fixed-left),
+	.tocguide:not(.is-docked):not(.is-fixed-left) {
+		margin-block: 1.15rem;
+		font-size: var(--tocguide-font-size, 0.9em);
+
+		&:not(.is-style-minimal):not(.tocguide--minimal):not(.is-compact):not(.is-dismissed) {
+			padding: var(--tocguide-padding, 1.15rem 1.35rem);
+		}
+
+		.tocguide__header {
+			margin-bottom: 0.75rem;
+		}
+
+		.tocguide__header-actions {
+			gap: 1.15rem;
+		}
+
+		.tocguide__item,
+		li {
+			margin-block: var(--tocguide-item-gap, 0.42rem);
+		}
+
+		.tocguide__marker:not(.tocguide__marker--bullet) {
+			min-width: 1.25rem;
+			height: 1.25rem;
+		}
+
+		.tocguide__toggle,
+		.tocguide__close {
+			width: 2rem;
+			height: 2rem;
+			min-width: 2rem;
+			min-height: 2rem;
+			max-width: 2rem;
+			max-height: 2rem;
+		}
+
+		.tocguide__focus,
+		.tocguide__restore {
+			height: 2rem;
+			padding: 0 0.7rem;
+			font-size: 0.72rem;
+		}
+
+		.tocguide__svg {
+			width: 13px;
+			height: 13px;
+		}
+	}
+}
+
 /* A narrow outline, including a sidebar on a wide page, uses one column. */
 @container tocguide (max-width: 36rem) {
 
