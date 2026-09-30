@@ -82,6 +82,83 @@ const remembered = ( key ) => {
 	}
 };
 
+// Desktop only: pin the first outline to the left edge of the viewport and
+// reserve the same width in the page so the article starts beside it.
+const DOCK_GAP = 20;
+let dockNav = null;
+let dockObserver = null;
+let dockQuery = null;
+
+const clearDock = () => {
+	document.documentElement.classList.remove( 'tocguide-has-dock' );
+	document.documentElement.style.removeProperty( '--tocguide-dock-offset' );
+	if ( dockNav ) {
+		dockNav.classList.remove( 'is-docked' );
+	}
+	if ( dockObserver ) {
+		dockObserver.disconnect();
+		dockObserver = null;
+	}
+	dockNav = null;
+};
+
+const measureDock = () => {
+	if ( ! dockNav || ! dockNav.classList.contains( 'is-docked' ) ) {
+		return;
+	}
+	const width = dockNav.getBoundingClientRect().width;
+	const offset = Math.ceil( width + DOCK_GAP );
+	document.documentElement.style.setProperty(
+		'--tocguide-dock-offset',
+		offset + 'px'
+	);
+};
+
+const dockMedia = () => {
+	if ( ! dockQuery && window.matchMedia ) {
+		dockQuery = window.matchMedia( '(min-width: 1100px)' );
+		const onChange = () => applyDock();
+		if ( dockQuery.addEventListener ) {
+			dockQuery.addEventListener( 'change', onChange );
+		} else if ( dockQuery.addListener ) {
+			dockQuery.addListener( onChange );
+		}
+	}
+	return dockQuery;
+};
+
+const canDock = () => {
+	if ( ! document.body || document.body.classList.contains( 'wp-admin' ) ) {
+		return false;
+	}
+	if ( document.querySelector( '.editor-styles-wrapper' ) ) {
+		return false;
+	}
+	const query = dockMedia();
+	return Boolean( query && query.matches );
+};
+
+const applyDock = () => {
+	const first = document.querySelector(
+		'.wp-block-tocguide-table-of-contents, .tocguide'
+	);
+	if ( ! canDock() || ! first ) {
+		clearDock();
+		return;
+	}
+	if ( dockNav && dockNav !== first ) {
+		dockNav.classList.remove( 'is-docked' );
+	}
+	dockNav = first;
+	dockNav.classList.add( 'is-docked' );
+	document.documentElement.classList.add( 'tocguide-has-dock' );
+	measureDock();
+	if ( ! dockObserver && typeof window.ResizeObserver !== 'undefined' ) {
+		dockObserver = new window.ResizeObserver( () => measureDock() );
+		dockObserver.observe( dockNav );
+	}
+};
+
 const initClose = ( nav ) => {
 	const button = nav.querySelector( '.tocguide__close' );
 	const restore = nav.querySelector( '.tocguide__restore' );
@@ -97,6 +174,7 @@ const initClose = ( nav ) => {
 			remember( key, true );
 			announce( nav, 'Table of contents hidden.' );
 			restore.focus();
+			measureDock();
 		}
 	};
 
@@ -106,6 +184,7 @@ const initClose = ( nav ) => {
 		remember( key, false );
 		announce( nav, 'Table of contents shown.' );
 		button.focus();
+		measureDock();
 	};
 
 	if ( remembered( key ) ) {
@@ -1266,6 +1345,8 @@ const initNav = ( nav ) => {
 	if ( nav.classList.contains( 'has-export' ) ) {
 		initExport( nav );
 	}
+
+	applyDock();
 };
 
 domReady( () => {

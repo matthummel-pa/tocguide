@@ -10,7 +10,7 @@
 	border-style: var(--tocguide-border-style, solid);
 	border-color: var(--tocguide-border-color, var(--tocguide-line, #e2e8f0));
 	border-radius: var(--tocguide-radius, 8px);
-	padding: var(--tocguide-padding, 1.25rem 1.5rem);
+	padding: var(--tocguide-padding, 1.35rem 1.5rem);
 	background: var(--tocguide-bg, color-mix(in srgb, currentcolor 4%, transparent));
 	color: var(--tocguide-color, inherit);
 	font-family: var(--tocguide-font-family, inherit);
@@ -177,7 +177,7 @@
 .wp-block-tocguide-table-of-contents li,
 .tocguide .tocguide__item,
 .tocguide li {
-	margin: var(--tocguide-item-gap, 0.28rem) 0;
+	margin: var(--tocguide-item-gap, 0.4rem) 0;
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__link,
@@ -216,7 +216,7 @@
 
 .wp-block-tocguide-table-of-contents .tocguide__sub,
 .tocguide .tocguide__sub {
-	margin-block-start: 0.25rem;
+	margin-block-start: 0.35rem;
 	padding-inline-start: 1.15rem;
 }
 
@@ -602,7 +602,7 @@
 .wp-block-tocguide-table-of-contents .tocguide__time,
 .tocguide .tocguide__time {
 	font-size: 0.72em;
-	opacity: 0.42;
+	opacity: 0.75;
 	white-space: nowrap;
 	flex-shrink: 0;
 	font-variant-numeric: tabular-nums;
@@ -640,7 +640,7 @@
 	display: block;
 	font-size: 0.78em;
 	line-height: 1.5;
-	opacity: 0.52;
+	opacity: 0.78;
 	margin-top: 0.25rem;
 	font-weight: 400;
 	font-style: normal;
@@ -649,7 +649,7 @@
 // ─ Reading progress: fade sections the reader has scrolled past
 .wp-block-tocguide-table-of-contents .tocguide__item.is-read > .tocguide__item-row > .tocguide__link,
 .tocguide .tocguide__item.is-read > .tocguide__item-row > .tocguide__link {
-	opacity: 0.35;
+	opacity: 0.72;
 	transition: opacity 0.3s;
 }
 
@@ -768,7 +768,7 @@
 .wp-block-tocguide-table-of-contents .tocguide__total-time,
 .tocguide .tocguide__total-time {
 	font-size: 0.75em;
-	opacity: 0.6;
+	opacity: 0.8;
 	letter-spacing: 0.02em;
 }
 
@@ -1157,5 +1157,224 @@ html.tocguide-is-focusing .tocguide-focus-dim {
 
 	html.tocguide-is-focusing .tocguide-focus-dim {
 		opacity: 1;
+	}
+}
+
+// Desktop dock. The front end adds .is-docked at 1100px and up.
+// Colors are pinned so a light preset cannot drop contrast.
+// Text on #101820 is at least 4.5:1. #2f8f5e passes 3:1
+// on both the panel and white.
+@media (min-width: 1100px) {
+
+	html.tocguide-has-dock body {
+		padding-inline-start: var(--tocguide-dock-offset, 0px);
+	}
+
+	.wp-block-tocguide-table-of-contents.is-docked,
+	.tocguide.is-docked {
+		position: fixed;
+		z-index: 20;
+		inset-inline-start: 0;
+		top: 50%;
+		transform: translateY(-50%);
+		width: min(18rem, 32vw);
+		max-height: min(70vh, 36rem);
+		box-sizing: border-box;
+		margin: 0;
+		padding: 1.2rem 1.15rem 1.2rem 1rem;
+		overflow-x: hidden;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		scrollbar-color: #7d92a1 #1a2832;
+		border: 3px solid var(--tocguide-dock-line, #2f8f5e) !important; /* stylelint-disable-line declaration-no-important */
+		border-start-start-radius: 0;
+		border-end-start-radius: 0;
+		border-start-end-radius: 1rem;
+		border-end-end-radius: 1rem;
+		background: var(--tocguide-dock-bg, #101820) !important; /* stylelint-disable-line declaration-no-important */
+		color: var(--tocguide-dock-ink, #f7f9fb) !important; /* stylelint-disable-line declaration-no-important */
+		box-shadow: 4px 0 24px rgba(0, 0, 0, 0.22);
+		--tocguide-dock-bg: #101820;
+		--tocguide-dock-ink: #f7f9fb;
+		--tocguide-dock-muted: #c5d0da;
+		--tocguide-dock-hover: #d8ffe9;
+		--tocguide-dock-active: #b6f3d4;
+		--tocguide-dock-on-accent: #102018;
+		--tocguide-dock-fill: #15222c;
+		--tocguide-dock-field: #1a2832;
+		--tocguide-dock-line: #2f8f5e;
+		--tocguide-dock-field-line: #7d92a1;
+		--tocguide-dock-marker-bg: #b6f3d4;
+
+		.tocguide__header {
+			margin-bottom: 0.85rem;
+		}
+
+		.tocguide__title {
+			color: var(--tocguide-dock-ink);
+		}
+
+		.tocguide__link,
+		a {
+			padding-block: 0.28rem;
+			color: var(--tocguide-dock-ink);
+		}
+
+		.tocguide__link:hover,
+		.tocguide__link:focus-visible,
+		a:hover,
+		a:focus-visible {
+			color: var(--tocguide-dock-hover);
+		}
+
+		.tocguide__link.is-active {
+			color: var(--tocguide-dock-active);
+		}
+
+		.tocguide__item {
+			margin-block: 0.15rem;
+		}
+
+		.tocguide__item.is-read > .tocguide__item-row > .tocguide__link {
+			opacity: 1;
+			color: var(--tocguide-dock-muted);
+		}
+
+		.tocguide__item.is-read > .tocguide__item-row > .tocguide__link.is-active {
+			color: var(--tocguide-dock-active);
+		}
+
+		.tocguide__marker {
+			background: var(--tocguide-dock-marker-bg);
+			color: var(--tocguide-dock-on-accent);
+		}
+
+		.tocguide__marker--bullet {
+			background: var(--tocguide-dock-marker-bg);
+		}
+
+		&.is-marker-plain .tocguide__marker:not(.tocguide__marker--bullet) {
+			background: transparent;
+			color: var(--tocguide-dock-active);
+		}
+
+		.tocguide__time,
+		.tocguide__preview,
+		.tocguide__total-time {
+			opacity: 1;
+			color: var(--tocguide-dock-muted);
+		}
+
+		.tocguide__toggle,
+		.tocguide__close,
+		.tocguide__focus,
+		.tocguide__restore,
+		.tocguide__icon-btn,
+		.tocguide__resume-btn,
+		.tocguide__export-btn,
+		.tocguide__reaction {
+			border-color: var(--tocguide-dock-line);
+			background: var(--tocguide-dock-fill);
+			color: var(--tocguide-dock-hover);
+			opacity: 1;
+		}
+
+		.tocguide__toggle:hover,
+		.tocguide__close:hover,
+		.tocguide__focus:hover,
+		.tocguide__restore:hover,
+		.tocguide__focus[aria-pressed="true"],
+		.tocguide__icon-btn:hover,
+		.tocguide__icon-btn.has-content,
+		.tocguide__resume-btn:hover,
+		.tocguide__export-btn:hover,
+		.tocguide__export-btn:focus-visible,
+		.tocguide__reaction:hover,
+		.tocguide__reaction[aria-pressed="true"] {
+			border-color: transparent;
+			background: var(--tocguide-dock-active);
+			color: var(--tocguide-dock-on-accent);
+			opacity: 1;
+		}
+
+		.tocguide__export-bar {
+			border-top-color: var(--tocguide-dock-line);
+		}
+
+		.tocguide__note {
+			border-inline-start-color: var(--tocguide-dock-line);
+			background: var(--tocguide-dock-fill);
+			color: var(--tocguide-dock-ink);
+		}
+
+		.tocguide__rnote-ta {
+			border-color: var(--tocguide-dock-field-line);
+			background: var(--tocguide-dock-field);
+			color: var(--tocguide-dock-ink);
+		}
+
+		.tocguide__density-bar {
+			background: var(--tocguide-dock-active);
+			opacity: 0.55;
+		}
+
+		.tocguide__reading-bar {
+			background: var(--tocguide-dock-active);
+		}
+
+		a:focus-visible,
+		button:focus-visible {
+			outline-color: var(--tocguide-dock-hover);
+		}
+
+		&.is-dismissed {
+			width: auto;
+			max-height: none;
+			padding: 0.65rem 0.75rem 0.65rem 0.6rem;
+			overflow: visible;
+			border: 3px solid var(--tocguide-dock-line, #2f8f5e) !important; /* stylelint-disable-line declaration-no-important */
+			background: var(--tocguide-dock-bg, #101820) !important; /* stylelint-disable-line declaration-no-important */
+			box-shadow: 4px 0 24px rgba(0, 0, 0, 0.22);
+		}
+	}
+
+	html[dir="rtl"] .wp-block-tocguide-table-of-contents.is-docked,
+	html[dir="rtl"] .tocguide.is-docked {
+		box-shadow: -4px 0 24px rgba(0, 0, 0, 0.22);
+	}
+}
+
+@media print {
+
+	html.tocguide-has-dock body {
+		padding-inline-start: 0;
+	}
+
+	.wp-block-tocguide-table-of-contents.is-docked,
+	.tocguide.is-docked {
+		position: static;
+		inset-inline-start: auto;
+		top: auto;
+		transform: none;
+		width: auto;
+		max-height: none;
+		margin-block: 1.5rem;
+		overflow: visible;
+		border: 1px solid #ccc !important; /* stylelint-disable-line declaration-no-important */
+		border-radius: 8px;
+		background: none !important; /* stylelint-disable-line declaration-no-important */
+		color: inherit !important; /* stylelint-disable-line declaration-no-important */
+		box-shadow: none;
+		--tocguide-dock-bg: transparent;
+		--tocguide-dock-ink: CanvasText;
+		--tocguide-dock-muted: CanvasText;
+		--tocguide-dock-hover: CanvasText;
+		--tocguide-dock-active: CanvasText;
+		--tocguide-dock-on-accent: CanvasText;
+		--tocguide-dock-fill: transparent;
+		--tocguide-dock-field: transparent;
+		--tocguide-dock-line: #ccc;
+		--tocguide-dock-field-line: #ccc;
+		--tocguide-dock-marker-bg: transparent;
 	}
 }
