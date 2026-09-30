@@ -390,7 +390,6 @@ const appendFocusExitGlyph = ( host ) => {
 		'M15.75 3.5H18.5A2 2 0 0 1 20.5 5.5v2.75',
 		'M8.25 20.5H5.5A2 2 0 0 1 3.5 18.5v-2.75',
 		'M15.75 20.5H18.5A2 2 0 0 0 20.5 18.5v-2.75',
-		'M9.25 9.25h5.5v5.5h-5.5z',
 	].forEach( ( d ) => {
 		const path = document.createElementNS(
 			'http://www.w3.org/2000/svg',
@@ -425,7 +424,7 @@ const fillFocusExit = ( exit, restore ) => {
 	label.textContent = restore;
 	const detail = document.createElement( 'span' );
 	detail.className = 'tocguide__focus-exit-detail';
-	detail.textContent = __( 'Restores the rest of the page', 'tocguide' );
+	detail.textContent = __( 'Bring the rest back', 'tocguide' );
 	copy.append( label, detail );
 
 	const hint = document.createElement( 'span' );

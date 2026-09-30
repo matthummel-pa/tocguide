@@ -1624,13 +1624,13 @@ html.tocguide-is-focusing .tocguide__focus-exit {
 	transform: translateX(-50%);
 	display: inline-flex;
 	align-items: center;
-	gap: 0.7rem;
-	min-height: 3.35rem;
+	gap: 0.65rem;
+	min-height: 3.15rem;
 	max-width: calc(100vw - 1.5rem);
-	padding: 0.4rem 0.45rem 0.4rem 0.4rem;
-	border: 1px solid rgba(255, 255, 255, 0.14);
+	padding: 0.35rem 0.4rem 0.35rem 0.35rem;
+	border: 1px solid rgba(255, 255, 255, 0.16);
 	border-radius: 999px;
-	background: rgba(28, 25, 23, 0.94);
+	background: #1c1917;
 	color: #f6f1e8;
 	font-family: system-ui, "Segoe UI", sans-serif;
 	font-size: 0.9375rem;
@@ -1638,6 +1638,7 @@ html.tocguide-is-focusing .tocguide__focus-exit {
 	letter-spacing: -0.02em;
 	line-height: 1.15;
 	text-align: start;
+	white-space: nowrap;
 	cursor: pointer;
 	user-select: none;
 	touch-action: manipulation;
@@ -1645,9 +1646,9 @@ html.tocguide-is-focusing .tocguide__focus-exit {
 	visibility: visible;
 	pointer-events: auto;
 	box-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.14) inset,
-		0 18px 40px rgba(28, 25, 23, 0.34);
-	animation: tocguide-focus-exit-in 0.32s ease;
+		0 1px 0 rgba(255, 255, 255, 0.16) inset,
+		0 18px 40px rgba(28, 25, 23, 0.38);
+	animation: tocguide-focus-exit-in 0.32s ease both;
 	transition:
 		transform 0.18s ease,
 		background 0.18s ease,
@@ -1658,8 +1659,8 @@ html.tocguide-is-focusing .tocguide__focus-exit {
 @supports (backdrop-filter: blur(16px)) {
 
 	html.tocguide-is-focusing .tocguide__focus-exit {
-		background: rgba(28, 25, 23, 0.82);
-		backdrop-filter: blur(16px) saturate(1.2);
+		background: rgba(28, 25, 23, 0.94);
+		backdrop-filter: blur(16px) saturate(1.15);
 	}
 }
 
@@ -1706,7 +1707,8 @@ html.tocguide-is-focusing .tocguide__focus-exit .tocguide__svg {
 html.tocguide-is-focusing .tocguide__focus-exit-copy {
 	display: flex;
 	flex-direction: column;
-	gap: 0.12rem;
+	justify-content: center;
+	gap: 0.1rem;
 	min-width: 0;
 	padding-inline-end: 0.15rem;
 }
@@ -1754,14 +1756,16 @@ html.tocguide-is-focusing .tocguide__focus-exit[hidden] {
 	display: none !important; /* stylelint-disable-line declaration-no-important */
 }
 
-@media (hover: none) and (pointer: coarse) {
+@media (max-width: 600px), (hover: none) and (pointer: coarse) {
 
+	html.tocguide-is-focusing .tocguide__focus-exit-detail,
 	html.tocguide-is-focusing .tocguide__focus-exit-kbd {
 		display: none;
 	}
 
 	html.tocguide-is-focusing .tocguide__focus-exit {
-		padding-inline-end: 1rem;
+		min-height: 2.85rem;
+		padding-inline-end: 1.05rem;
 	}
 }
 
