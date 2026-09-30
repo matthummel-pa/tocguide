@@ -139,18 +139,20 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 		 */
 		$tocguide_color_field = function ( $name, $value, $label ) use ( $tocguide_opt ) {
 			$swatch_val = '' !== $value ? $value : '#ffffff';
+			$field_id   = 'tocguide-color-' . $name;
 			printf(
 				'<span class="tocguide-color-field">'
-				. '<input type="text" name="%1$s[%2$s]" value="%3$s" placeholder="#rrggbb" maxlength="7" aria-label="%4$s">'
-				. '<input type="color" value="%5$s" aria-hidden="true" tabindex="-1">'
-				. '<a href="#" class="tocguide-color-clear" aria-label="%6$s">%7$s</a>'
+				. '<input type="text" id="%1$s" name="%2$s[%3$s]" value="%4$s" placeholder="#rrggbb" maxlength="7" spellcheck="false" autocomplete="off" aria-label="%5$s">'
+				. '<input type="color" value="%6$s" aria-label="%7$s">'
+				. '<button type="button" class="tocguide-color-clear">%8$s</button>'
 				. '</span>',
+				esc_attr( $field_id ),
 				esc_attr( $tocguide_opt ),
 				esc_attr( $name ),
 				esc_attr( $value ),
 				esc_attr( $label ),
 				esc_attr( $swatch_val ),
-				esc_attr__( 'Clear colour', 'tocguide' ),
+				esc_attr( sprintf( /* translators: %s: colour field name. */ __( 'Pick %s', 'tocguide' ), $label ) ),
 				esc_html__( 'Clear', 'tocguide' )
 			);
 		};
@@ -188,50 +190,36 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 		if ( ! empty( $settings['auto_hide_markers'] ) ) {
 			$tocguide_preview_classes[] = 'is-no-markers';
 		}
+		if ( TOCguide_Settings::has_design_colors() ) {
+			$tocguide_preview_classes[] = 'has-design-colors';
+		}
 		$tocguide_preview_classes = array_merge( $tocguide_preview_classes, TOCguide_Settings::appearance_classes() );
+		$tocguide_focus_preview = isset( $settings['focus_style'] ) ? $settings['focus_style'] : 'default';
+		$tocguide_focus_attr    = '';
+		if ( in_array( $tocguide_focus_preview, array( 'bold', 'high-contrast' ), true ) ) {
+			$tocguide_focus_attr = ' data-tocguide-focus="' . esc_attr( $tocguide_focus_preview ) . '"';
+		}
 		?>
 		<form action="options.php" method="post" class="tocguide-admin__form">
 			<?php settings_fields( 'tocguide_settings_group' ); ?>
 
-			<nav class="tocguide-admin__sections" aria-label="<?php esc_attr_e( 'Settings sections', 'tocguide' ); ?>">
+			<div class="tocguide-admin__sections" role="tablist" aria-label="<?php esc_attr_e( 'Settings sections', 'tocguide' ); ?>">
 				<?php foreach ( $tocguide_sections as $tocguide_section_id => $tocguide_section_label ) : ?>
 					<a
 						class="tocguide-admin__section<?php echo $tocguide_section_id === $tocguide_section ? ' is-active' : ''; ?>"
+						role="tab"
+						id="tocguide-tab-<?php echo esc_attr( $tocguide_section_id ); ?>"
 						href="<?php echo esc_url( admin_url( 'options-general.php?page=tocguide&section=' . $tocguide_section_id ) ); ?>"
-						<?php echo $tocguide_section_id === $tocguide_section ? 'aria-current="page"' : ''; ?>
+						aria-controls="tocguide-section-<?php echo esc_attr( $tocguide_section_id ); ?>"
+						aria-selected="<?php echo $tocguide_section_id === $tocguide_section ? 'true' : 'false'; ?>"
 					><?php echo esc_html( $tocguide_section_label ); ?></a>
 				<?php endforeach; ?>
-			</nav>
-
-			<div class="tocguide-preview">
-				<p class="tocguide-preview__label"><?php esc_html_e( 'Outline preview', 'tocguide' ); ?></p>
-				<p class="description"><?php esc_html_e( 'Updates as you change style, compact, colours, and type. Save to apply this look to auto-inserted outlines. A block you placed by hand uses its own Styles panel (Default, Minimal, Boxed, Underline, Card) and the Compact toggle in the block sidebar.', 'tocguide' ); ?></p>
-				<nav id="tocguide-preview-nav" class="<?php echo esc_attr( implode( ' ', $tocguide_preview_classes ) ); ?>" style="<?php echo esc_attr( $tocguide_preview_style ); ?>" aria-hidden="true">
-					<p class="tocguide__title"><?php esc_html_e( 'Table of Contents', 'tocguide' ); ?></p>
-					<div class="tocguide__list" role="list">
-						<div class="tocguide__item" role="listitem">
-							<div class="tocguide__item-row">
-								<span class="tocguide__marker" aria-hidden="true">1</span>
-								<a class="tocguide__link"><?php esc_html_e( 'Getting started', 'tocguide' ); ?></a>
-							</div>
-						</div>
-						<div class="tocguide__item" role="listitem">
-							<div class="tocguide__item-row">
-								<span class="tocguide__marker" aria-hidden="true">2</span>
-								<a class="tocguide__link"><?php esc_html_e( 'How the styles differ', 'tocguide' ); ?></a>
-							</div>
-						</div>
-						<div class="tocguide__item" role="listitem">
-							<div class="tocguide__item-row">
-								<span class="tocguide__marker" aria-hidden="true">3</span>
-								<a class="tocguide__link"><?php esc_html_e( 'Colours, type, and spacing', 'tocguide' ); ?></a>
-							</div>
-						</div>
-					</div>
-				</nav>
 			</div>
 
-			<section class="tocguide-card" id="tocguide-section-reading"<?php echo 'reading' === $tocguide_section ? '' : ' hidden'; ?>>
+			<div class="tocguide-admin__layout">
+			<div class="tocguide-admin__main">
+
+			<section class="tocguide-card" id="tocguide-section-reading" role="tabpanel" aria-labelledby="tocguide-tab-reading"<?php echo 'reading' === $tocguide_section ? '' : ' hidden'; ?>>
 				<h2><?php esc_html_e( 'Reading experience', 'tocguide' ); ?></h2>
 				<table class="form-table" role="presentation">
 					<tr>
@@ -269,7 +257,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 				</table>
 			</section>
 
-			<section class="tocguide-card" id="tocguide-section-auto"<?php echo 'auto' === $tocguide_section ? '' : ' hidden'; ?>>
+			<section class="tocguide-card" id="tocguide-section-auto" role="tabpanel" aria-labelledby="tocguide-tab-auto"<?php echo 'auto' === $tocguide_section ? '' : ' hidden'; ?>>
 				<h2><?php esc_html_e( 'Auto-generate the block', 'tocguide' ); ?></h2>
 				<p class="description"><?php esc_html_e( 'Prints the Table of Contents Gutenberg block on the front end. Posts that already have the block (or the [tocguide] shortcode) are left alone. You can still insert the block by hand in the editor.', 'tocguide' ); ?></p>
 				<table class="form-table" role="presentation">
@@ -424,7 +412,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 				</table>
 			</section>
 
-			<section class="tocguide-card" id="tocguide-section-seo"<?php echo 'seo' === $tocguide_section ? '' : ' hidden'; ?>>
+			<section class="tocguide-card" id="tocguide-section-seo" role="tabpanel" aria-labelledby="tocguide-tab-seo"<?php echo 'seo' === $tocguide_section ? '' : ' hidden'; ?>>
 				<h2><?php esc_html_e( 'SEO &amp; data', 'tocguide' ); ?></h2>
 				<table class="form-table" role="presentation">
 					<tr>
@@ -449,16 +437,17 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 			</section>
 
 			<!-- ── Design & Appearance ───────────────────────────────────────── -->
-			<section class="tocguide-card" id="tocguide-section-design"<?php echo 'design' === $tocguide_section ? '' : ' hidden'; ?>>
+			<section class="tocguide-card" id="tocguide-section-design" role="tabpanel" aria-labelledby="tocguide-tab-design"<?php echo 'design' === $tocguide_section ? '' : ' hidden'; ?>>
 				<h2><?php esc_html_e( 'Design &amp; Appearance', 'tocguide' ); ?></h2>
 				<p class="description">
-					<?php esc_html_e( 'These choices apply on desktop, tablet, and mobile, including the left-edge outline. A size or colour you enter is the one that prints. Leave a size empty to keep the built-in value. Per-block color, type, and spacing in the editor still win.', 'tocguide' ); ?>
+					<?php esc_html_e( 'The preview updates as you edit. Colours, type, and spacing apply to every outline when you save, on desktop, tablet, and mobile, including the left-edge outline. The style below applies to auto-inserted outlines. A block placed by hand keeps the style chosen in the editor. Leave a size empty to keep the built-in value. A whole number is saved as pixels (15 becomes 15px). A small decimal is saved as rem (0.95 becomes 0.95rem).', 'tocguide' ); ?>
 				</p>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><label for="tocguide-auto-style"><?php esc_html_e( 'Style', 'tocguide' ); ?></label></th>
+						<th scope="row"><?php esc_html_e( 'Style', 'tocguide' ); ?></th>
 						<td>
-							<select name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_style]" id="tocguide-auto-style">
+							<fieldset class="tocguide-style-picker">
+								<legend class="screen-reader-text"><?php esc_html_e( 'Outline style', 'tocguide' ); ?></legend>
 								<?php
 								$tocguide_styles = array(
 									'default'   => __( 'Default', 'tocguide' ),
@@ -469,9 +458,12 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 								);
 								foreach ( $tocguide_styles as $tocguide_slug => $tocguide_label ) :
 									?>
-									<option value="<?php echo esc_attr( $tocguide_slug ); ?>" <?php selected( $settings['auto_style'], $tocguide_slug ); ?>><?php echo esc_html( $tocguide_label ); ?></option>
+									<label class="tocguide-style-picker__option">
+										<input type="radio" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_style]" value="<?php echo esc_attr( $tocguide_slug ); ?>" <?php checked( $settings['auto_style'], $tocguide_slug ); ?>>
+										<span><?php echo esc_html( $tocguide_label ); ?></span>
+									</label>
 								<?php endforeach; ?>
-							</select>
+							</fieldset>
 							<p class="description"><?php esc_html_e( 'Default keeps the bordered box. Minimal drops the border and shadow. Boxed adds an inner frame. Underline is a top rule. Card is a floating panel with a shadow.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
@@ -483,6 +475,9 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 								<?php esc_html_e( 'Keep the outline independent of the theme. The list is drawn with TOCguide badges instead of the theme’s numbers, so a stray “0.” cannot appear in front of a heading. Turn off to let the theme style the list.', 'tocguide' ); ?>
 							</label>
 						</td>
+					</tr>
+					<tr>
+						<td colspan="2"><h3 class="tocguide-design-group"><?php esc_html_e( 'Type', 'tocguide' ); ?></h3></td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="tocguide-design-font"><?php esc_html_e( 'Font', 'tocguide' ); ?></label></th>
@@ -508,49 +503,55 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Background colour', 'tocguide' ); ?></th>
+						<td colspan="2"><h3 class="tocguide-design-group"><?php esc_html_e( 'Colours', 'tocguide' ); ?></h3></td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="tocguide-color-design_bg_color"><?php esc_html_e( 'Background colour', 'tocguide' ); ?></label></th>
 						<td>
 							<?php $tocguide_color_field( 'design_bg_color', $settings['design_bg_color'], __( 'Background colour (hex)', 'tocguide' ) ); ?>
 							<p class="description"><?php esc_html_e( 'e.g. #f8fafc — overrides the preset background.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Text colour', 'tocguide' ); ?></th>
+						<th scope="row"><label for="tocguide-color-design_text_color"><?php esc_html_e( 'Text colour', 'tocguide' ); ?></label></th>
 						<td>
 							<?php $tocguide_color_field( 'design_text_color', $settings['design_text_color'], __( 'Text colour (hex)', 'tocguide' ) ); ?>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Link colour', 'tocguide' ); ?></th>
+						<th scope="row"><label for="tocguide-color-design_link_color"><?php esc_html_e( 'Link colour', 'tocguide' ); ?></label></th>
 						<td>
 							<?php $tocguide_color_field( 'design_link_color', $settings['design_link_color'], __( 'Link colour (hex)', 'tocguide' ) ); ?>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Link hover colour', 'tocguide' ); ?></th>
+						<th scope="row"><label for="tocguide-color-design_link_hover"><?php esc_html_e( 'Link hover colour', 'tocguide' ); ?></label></th>
 						<td>
 							<?php $tocguide_color_field( 'design_link_hover', $settings['design_link_hover'], __( 'Link hover colour (hex)', 'tocguide' ) ); ?>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Accent colour', 'tocguide' ); ?></th>
+						<th scope="row"><label for="tocguide-color-design_accent_color"><?php esc_html_e( 'Accent colour', 'tocguide' ); ?></label></th>
 						<td>
 							<?php $tocguide_color_field( 'design_accent_color', $settings['design_accent_color'], __( 'Accent colour (hex)', 'tocguide' ) ); ?>
 							<p class="description"><?php esc_html_e( 'Active link, progress bar, and the default number badge.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Title colour', 'tocguide' ); ?></th>
+						<th scope="row"><label for="tocguide-color-design_title_color"><?php esc_html_e( 'Title colour', 'tocguide' ); ?></label></th>
 						<td>
 							<?php $tocguide_color_field( 'design_title_color', $settings['design_title_color'], __( 'Title colour (hex)', 'tocguide' ) ); ?>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Icon colour', 'tocguide' ); ?></th>
+						<th scope="row"><label for="tocguide-color-design_icon_color"><?php esc_html_e( 'Icon colour', 'tocguide' ); ?></label></th>
 						<td>
 							<?php $tocguide_color_field( 'design_icon_color', $settings['design_icon_color'], __( 'Icon colour (hex)', 'tocguide' ) ); ?>
 							<p class="description"><?php esc_html_e( 'Note, citation, collapse, and resume buttons.', 'tocguide' ); ?></p>
 						</td>
+					</tr>
+					<tr>
+						<td colspan="2"><h3 class="tocguide-design-group"><?php esc_html_e( 'Markers and frame', 'tocguide' ); ?></h3></td>
 					</tr>
 					<tr>
 						<th scope="row"><?php esc_html_e( 'Number badge', 'tocguide' ); ?></th>
@@ -582,9 +583,9 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Font size', 'tocguide' ); ?></th>
+						<th scope="row"><label for="tocguide-design-font-size"><?php esc_html_e( 'Font size', 'tocguide' ); ?></label></th>
 						<td>
-							<input type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_font_size]" value="<?php echo esc_attr( $settings['design_font_size'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 15px or 0.9rem', 'tocguide' ); ?>" class="regular-text">
+							<input id="tocguide-design-font-size" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_font_size]" value="<?php echo esc_attr( $settings['design_font_size'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 15px or 0.9rem', 'tocguide' ); ?>" class="regular-text" data-tocguide-length="size" inputmode="decimal">
 						</td>
 					</tr>
 					<tr>
@@ -603,7 +604,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 					<tr>
 						<th scope="row"><label for="tocguide-design-title-size"><?php esc_html_e( 'Title size', 'tocguide' ); ?></label></th>
 						<td>
-							<input id="tocguide-design-title-size" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_title_size]" value="<?php echo esc_attr( $settings['design_title_size'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1.15rem', 'tocguide' ); ?>" class="regular-text">
+							<input id="tocguide-design-title-size" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_title_size]" value="<?php echo esc_attr( $settings['design_title_size'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1.15rem', 'tocguide' ); ?>" class="regular-text" data-tocguide-length="size" inputmode="decimal">
 						</td>
 					</tr>
 					<tr>
@@ -620,31 +621,32 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Line height', 'tocguide' ); ?></th>
+						<th scope="row"><label for="tocguide-design-line-height"><?php esc_html_e( 'Line height', 'tocguide' ); ?></label></th>
 						<td>
-							<input type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_line_height]" value="<?php echo esc_attr( $settings['design_line_height'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1.6', 'tocguide' ); ?>" class="small-text">
+							<input id="tocguide-design-line-height" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_line_height]" value="<?php echo esc_attr( $settings['design_line_height'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1.6', 'tocguide' ); ?>" class="small-text" data-tocguide-length="number" inputmode="decimal">
 							<p class="description"><?php esc_html_e( 'Unitless number, e.g. 1.6.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="tocguide-design-tracking"><?php esc_html_e( 'Letter spacing', 'tocguide' ); ?></label></th>
 						<td>
-							<input id="tocguide-design-tracking" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_letter_spacing]" value="<?php echo esc_attr( $settings['design_letter_spacing'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. -0.02em', 'tocguide' ); ?>" class="small-text">
+							<input id="tocguide-design-tracking" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_letter_spacing]" value="<?php echo esc_attr( $settings['design_letter_spacing'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. -0.02em', 'tocguide' ); ?>" class="small-text" data-tocguide-length="signed" inputmode="decimal">
 						</td>
 					</tr>
 					<tr>
 						<th scope="row"><label for="tocguide-design-gap"><?php esc_html_e( 'Item spacing', 'tocguide' ); ?></label></th>
 						<td>
-							<input id="tocguide-design-gap" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_item_gap]" value="<?php echo esc_attr( $settings['design_item_gap'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 0.35rem', 'tocguide' ); ?>" class="small-text">
+							<input id="tocguide-design-gap" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_item_gap]" value="<?php echo esc_attr( $settings['design_item_gap'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 0.35rem', 'tocguide' ); ?>" class="small-text" data-tocguide-length="size" inputmode="decimal">
 							<p class="description"><?php esc_html_e( 'Space above and below each section row.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row"><?php esc_html_e( 'Border', 'tocguide' ); ?></th>
 						<td>
-							<fieldset>
-								<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px;">
-									<input type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_border_width]" value="<?php echo esc_attr( $settings['design_border_width'] ); ?>" placeholder="<?php esc_attr_e( 'width e.g. 1px', 'tocguide' ); ?>" class="small-text" style="width:90px;" aria-label="<?php esc_attr_e( 'Border width', 'tocguide' ); ?>">
+							<fieldset class="tocguide-border-fields">
+								<legend class="screen-reader-text"><?php esc_html_e( 'Border', 'tocguide' ); ?></legend>
+								<div class="tocguide-border-fields__row">
+									<input id="tocguide-design-border-width" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_border_width]" value="<?php echo esc_attr( $settings['design_border_width'] ); ?>" placeholder="<?php esc_attr_e( 'width e.g. 1px', 'tocguide' ); ?>" class="small-text" data-tocguide-length="size" inputmode="decimal" aria-label="<?php esc_attr_e( 'Border width', 'tocguide' ); ?>">
 									<select name="<?php echo esc_attr( $tocguide_opt ); ?>[design_border_style]" aria-label="<?php esc_attr_e( 'Border style', 'tocguide' ); ?>">
 										<option value="" <?php selected( $settings['design_border_style'], '' ); ?>><?php esc_html_e( '— style —', 'tocguide' ); ?></option>
 										<?php foreach ( array( 'solid', 'dashed', 'dotted', 'double', 'none' ) as $tocguide_bs ) : ?>
@@ -653,9 +655,9 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 									</select>
 									<?php $tocguide_color_field( 'design_border_color', $settings['design_border_color'], __( 'Border colour (hex)', 'tocguide' ) ); ?>
 								</div>
-								<div style="display:flex;gap:8px;align-items:center;">
+								<div class="tocguide-border-fields__row">
 									<label for="tocguide-design-radius"><?php esc_html_e( 'Border radius:', 'tocguide' ); ?></label>
-									<input id="tocguide-design-radius" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_border_radius]" value="<?php echo esc_attr( $settings['design_border_radius'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 8px', 'tocguide' ); ?>" class="small-text" style="width:80px;">
+									<input id="tocguide-design-radius" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_border_radius]" value="<?php echo esc_attr( $settings['design_border_radius'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 8px', 'tocguide' ); ?>" class="small-text" data-tocguide-length="size" inputmode="decimal">
 								</div>
 							</fieldset>
 						</td>
@@ -663,7 +665,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 					<tr>
 						<th scope="row"><label for="tocguide-design-padding"><?php esc_html_e( 'Padding', 'tocguide' ); ?></label></th>
 						<td>
-							<input id="tocguide-design-padding" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_padding]" value="<?php echo esc_attr( $settings['design_padding'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1.25rem', 'tocguide' ); ?>" class="small-text">
+							<input id="tocguide-design-padding" type="text" name="<?php echo esc_attr( $tocguide_opt ); ?>[design_padding]" value="<?php echo esc_attr( $settings['design_padding'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1.25rem', 'tocguide' ); ?>" class="regular-text" data-tocguide-length="box" inputmode="decimal">
 							<p class="description"><?php esc_html_e( 'One to four lengths, such as 1rem or 1.25rem 1.5rem. Leave blank for the preset default.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
@@ -671,7 +673,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 			</section>
 
 			<!-- ── Reading Guide & Study Tools global defaults ────────────────── -->
-			<section class="tocguide-card" id="tocguide-section-guide"<?php echo 'guide' === $tocguide_section ? '' : ' hidden'; ?>>
+			<section class="tocguide-card" id="tocguide-section-guide" role="tabpanel" aria-labelledby="tocguide-tab-guide"<?php echo 'guide' === $tocguide_section ? '' : ' hidden'; ?>>
 				<h2>
 					<?php esc_html_e( 'Reading Guide &amp; Study Tools', 'tocguide' ); ?>
 					<span class="tocguide-section-badge tocguide-section-badge--guide">v1.1</span>
@@ -777,7 +779,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 			</section>
 
 			<!-- ── Study Tools & Export global defaults ───────────────────────── -->
-			<section class="tocguide-card" id="tocguide-section-study"<?php echo 'study' === $tocguide_section ? '' : ' hidden'; ?>>
+			<section class="tocguide-card" id="tocguide-section-study" role="tabpanel" aria-labelledby="tocguide-tab-study"<?php echo 'study' === $tocguide_section ? '' : ' hidden'; ?>>
 				<h2>
 					<?php esc_html_e( 'Study Tools &amp; Export', 'tocguide' ); ?>
 					<span class="tocguide-section-badge tocguide-section-badge--study">v1.2</span>
@@ -826,7 +828,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 			</section>
 
 			<!-- ── Accessibility ─────────────────────────────────────────────── -->
-			<section class="tocguide-card" id="tocguide-section-accessibility"<?php echo 'accessibility' === $tocguide_section ? '' : ' hidden'; ?>>
+			<section class="tocguide-card" id="tocguide-section-accessibility" role="tabpanel" aria-labelledby="tocguide-tab-accessibility"<?php echo 'accessibility' === $tocguide_section ? '' : ' hidden'; ?>>
 				<h2><?php esc_html_e( 'Accessibility', 'tocguide' ); ?></h2>
 				<table class="form-table" role="presentation">
 					<tr>
@@ -837,13 +839,59 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 								<option value="bold" <?php selected( $settings['focus_style'], 'bold' ); ?>><?php esc_html_e( 'Bold — 3 px outline, offset 2 px (WCAG 2.1 AA)', 'tocguide' ); ?></option>
 								<option value="high-contrast" <?php selected( $settings['focus_style'], 'high-contrast' ); ?>><?php esc_html_e( 'High contrast — black outline on yellow background (WCAG 2.1 AAA)', 'tocguide' ); ?></option>
 							</select>
-							<p class="description"><?php esc_html_e( 'Applies to keyboard focus on TOC links. Does not affect the block editor.', 'tocguide' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Tab to a sample link in the preview to see this ring. It applies on the published outline and does not affect the block editor.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
 				</table>
 			</section>
 
-			<?php submit_button( __( 'Save settings', 'tocguide' ) ); ?>
+			</div>
+
+			<aside class="tocguide-preview">
+				<p class="tocguide-preview__label" id="tocguide-preview-label"><?php esc_html_e( 'Outline preview', 'tocguide' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Updates as you change style, colours, and type. Save to publish this look.', 'tocguide' ); ?></p>
+				<p class="tocguide-preview__status screen-reader-text" id="tocguide-preview-status" aria-live="polite"></p>
+				<p class="screen-reader-text"><?php esc_html_e( 'Sample outline. These links show the current design and stay on this page.', 'tocguide' ); ?></p>
+				<nav
+					id="tocguide-preview-nav"
+					class="<?php echo esc_attr( implode( ' ', $tocguide_preview_classes ) ); ?>"
+					style="<?php echo esc_attr( $tocguide_preview_style ); ?>"
+					aria-labelledby="tocguide-preview-label"
+					<?php echo $tocguide_focus_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped when built. ?>
+				>
+					<div class="tocguide__header">
+						<p class="tocguide__title"><?php esc_html_e( 'Table of Contents', 'tocguide' ); ?></p>
+						<div class="tocguide__header-actions">
+							<span class="tocguide__focus"><span><?php esc_html_e( 'Focus', 'tocguide' ); ?></span></span>
+						</div>
+					</div>
+					<div class="tocguide__list" role="list">
+						<div class="tocguide__item" role="listitem">
+							<div class="tocguide__item-row">
+								<span class="tocguide__marker" aria-hidden="true">1</span>
+								<a class="tocguide__link" href="#tocguide-preview-nav"><?php esc_html_e( 'Getting started', 'tocguide' ); ?></a>
+							</div>
+						</div>
+						<div class="tocguide__item" role="listitem">
+							<div class="tocguide__item-row">
+								<span class="tocguide__marker" aria-hidden="true">2</span>
+								<a class="tocguide__link" href="#tocguide-preview-nav"><?php esc_html_e( 'How the styles differ', 'tocguide' ); ?></a>
+							</div>
+						</div>
+						<div class="tocguide__item" role="listitem">
+							<div class="tocguide__item-row">
+								<span class="tocguide__marker" aria-hidden="true">3</span>
+								<a class="tocguide__link" href="#tocguide-preview-nav"><?php esc_html_e( 'Colours, type, and spacing', 'tocguide' ); ?></a>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</aside>
+			</div>
+
+			<div class="tocguide-admin__save">
+				<?php submit_button( __( 'Save settings', 'tocguide' ) ); ?>
+			</div>
 		</form>
 	<?php endif; ?>
 </div>

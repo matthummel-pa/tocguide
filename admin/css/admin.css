@@ -1,5 +1,5 @@
 .tocguide-admin {
-	max-width: 960px;
+	max-width: 1120px;
 	margin-top: 12px;
 }
 
@@ -81,12 +81,41 @@
 	color: #fff;
 }
 
+.tocguide-admin__section:focus-visible {
+	outline: 2px solid #1c3d2e;
+	outline-offset: 2px;
+}
+
+.tocguide-admin__layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+	gap: 16px;
+	align-items: start;
+}
+
 .tocguide-preview {
-	margin: 0 0 16px;
+	position: sticky;
+	top: 46px;
+	margin: 0;
 	padding: 14px 16px 16px;
 	background: #e7eeea;
 	border: 1px solid #d8e2db;
 	border-radius: 10px;
+}
+
+.tocguide-admin__save {
+	position: sticky;
+	bottom: 0;
+	z-index: 20;
+	margin-top: 8px;
+	padding: 0 0 8px;
+	background: #f0f0f1;
+	border-top: 1px solid #d8e2db;
+}
+
+.tocguide-admin__save .submit {
+	margin: 8px 0 0;
+	padding: 0;
 }
 
 .tocguide-preview__label {
@@ -229,15 +258,108 @@
 }
 
 .tocguide-color-clear {
+	border: 0;
+	background: transparent;
+	padding: 0;
+	color: #1d2327;
 	font-size: 12px;
-	color: #888;
-	text-decoration: none;
+	line-height: 1.4;
+	text-decoration: underline;
 	white-space: nowrap;
+	cursor: pointer;
 }
 
-.tocguide-color-clear:hover {
-	color: #d63638;
-	text-decoration: underline;
+.tocguide-color-clear:hover,
+.tocguide-color-clear:focus-visible {
+	color: #b32d2e;
+}
+
+.tocguide-admin input[aria-invalid="true"] {
+	border-color: #b32d2e;
+	box-shadow: 0 0 0 1px #b32d2e;
+}
+
+.tocguide-field-hint {
+	margin: 6px 0 0;
+	color: #8a2424;
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+.tocguide-design-group {
+	margin: 18px 0 0;
+	padding: 0;
+	color: #1c3d2e;
+	font-size: 13px;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.tocguide-style-picker {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.tocguide-style-picker__option {
+	position: relative;
+	display: inline-flex;
+	margin: 0;
+}
+
+.tocguide-style-picker__option input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.tocguide-style-picker__option span {
+	display: inline-block;
+	padding: 6px 12px;
+	border: 1px solid #d8e2db;
+	border-radius: 999px;
+	background: #fff;
+	color: #1c3d2e;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.4;
+}
+
+.tocguide-style-picker__option:has(input:checked) span {
+	background: #1c3d2e;
+	border-color: #1c3d2e;
+	color: #fff;
+}
+
+.tocguide-style-picker__option:has(input:focus-visible) span {
+	outline: 2px solid #1c3d2e;
+	outline-offset: 2px;
+}
+
+.tocguide-border-fields {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.tocguide-border-fields__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 6px;
+}
+
+.tocguide-border-fields__row .small-text {
+	width: 90px;
 }
 
 /* ── Section badges ─────────────────────────────────────────────────────── */
@@ -286,6 +408,18 @@
 
 #tocguide-guide-subopts .form-table td {
 	padding: 6px 0;
+}
+
+@media (max-width: 960px) {
+
+	.tocguide-admin__layout {
+		grid-template-columns: 1fr;
+	}
+
+	.tocguide-preview {
+		position: static;
+		order: -1;
+	}
 }
 
 @media (max-width: 782px) {

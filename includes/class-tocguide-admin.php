@@ -94,7 +94,14 @@ class TOCguide_Admin {
 			'tocguide-admin',
 			'tocguideAdmin',
 			array(
-				'fontStacks' => TOCguide_Settings::font_family_stacks(),
+				'fontStacks'     => TOCguide_Settings::font_family_stacks(),
+				'previewUpdated' => __( 'Outline preview updated.', 'tocguide' ),
+				'lengthHints'    => array(
+					'size'   => __( 'Use px, rem, or em. A whole number is saved as pixels. A small decimal is saved as rem.', 'tocguide' ),
+					'box'    => __( 'Use one to four lengths, such as 1rem or 12px 16px. A whole number is saved as pixels.', 'tocguide' ),
+					'signed' => __( 'Use a length such as -0.02em. A number without a unit is saved as em.', 'tocguide' ),
+					'number' => __( 'Use a unitless number, such as 1.6.', 'tocguide' ),
+				),
 			)
 		);
 	}

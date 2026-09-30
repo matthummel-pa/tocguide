@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.9
+Stable tag: 1.6.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -215,6 +215,10 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 4. Docs & Support tab in wp-admin (links to the documentation site).
 
 == Changelog ==
+
+= 1.6.10 =
+* Design changes show in a preview that stays on screen. A whole number such as 15 is saved as 15px, and a small decimal such as 0.95 is saved as 0.95rem, so a size you type is the size that prints.
+* Settings sections keep unsaved changes when you switch between them. Colour pickers and the style choices are keyboard accessible, and the preview links show the focus ring.
 
 = 1.6.9 =
 * Focus clears the page so only the post copy remains, on a plain sheet. Focus again brings the rest of the page back.

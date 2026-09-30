@@ -912,20 +912,9 @@ class TOCguide_Headings {
 		if ( ! empty( $attributes['collapsedDefault'] ) && ! $fixed_left ) {
 			$classes[] = 'is-collapsed';
 		}
-		$design_vars        = TOCguide_Settings::design_css_vars();
-		$design_color_props = array(
-			'--tocguide-bg',
-			'--tocguide-color',
-			'--tocguide-link-color',
-			'--tocguide-accent',
-			'--tocguide-title-color',
-			'--tocguide-marker-bg',
-		);
-		foreach ( $design_color_props as $design_prop ) {
-			if ( ! empty( $design_vars[ $design_prop ] ) ) {
-				$classes[] = 'has-design-colors';
-				break;
-			}
+		$design_vars = TOCguide_Settings::design_css_vars();
+		if ( TOCguide_Settings::has_design_colors() ) {
+			$classes[] = 'has-design-colors';
 		}
 		if ( ! empty( $attributes['compact'] ) ) {
 			$classes[] = 'is-compact';

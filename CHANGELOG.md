@@ -3,6 +3,13 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.10] - 2026-09-30
+
+### Changed
+- The settings preview stays beside the form and updates as you edit colours, type, spacing, style, and the focus ring.
+- A whole number in a size field is saved as pixels. A small decimal is saved as rem. An invalid size is marked and is not applied.
+- Switching settings sections keeps what you have typed. Save still publishes that look on every outline.
+
 ## [1.6.9] - 2026-09-30
 
 ### Changed

@@ -5,15 +5,28 @@
  *  – Colour text ↔ swatch sync for design settings.
  *  – Show/hide Reading Guide sub-options when guide mode is toggled.
  *  – Show/hide citation format when citations are toggled.
+ *  – Live outline preview, including sizes typed without a unit.
+ *  – Section tabs that keep unsaved changes on the page.
  *
  * Vanilla JS, no jQuery, no build step required.
  */
 ( function () {
 	'use strict';
 
+	const admin =
+		window.tocguideAdmin && typeof window.tocguideAdmin === 'object'
+			? window.tocguideAdmin
+			: {};
+	const LENGTH_HINT = admin.lengthHints || {
+		size: 'Use px, rem, or em. A whole number is saved as pixels. A small decimal is saved as rem.',
+		box: 'Use one to four lengths, such as 1rem or 12px 16px. A whole number is saved as pixels.',
+		signed: 'Use a length such as -0.02em. A number without a unit is saved as em.',
+		number: 'Use a unitless number, such as 1.6.',
+	};
+
 	/**
 	 * Sync a hex text input with a companion colour swatch (input[type=color]).
-	 * Adds a clear link to reset to empty (= "not set").
+	 * Adds a clear button to reset to empty (= "not set").
 	 */
 	function initColorFields() {
 		document
@@ -77,10 +90,100 @@
 			return;
 		}
 		function update() {
-			target.style.display = trigger.checked ? '' : 'none';
+			target.hidden = ! trigger.checked;
 		}
 		trigger.addEventListener( 'change', update );
 		update();
+	}
+
+	/**
+	 * Turn a typed size into the CSS length that will be saved.
+	 *
+	 * @param {string} raw  Field value.
+	 * @param {string} kind size, box, signed, or number.
+	 * @return {string|null} Normalized value, or null when it cannot be saved.
+	 */
+	function normalizeLength( raw, kind ) {
+		const v = raw.trim();
+		if ( '' === v ) {
+			return '';
+		}
+		if ( 'number' === kind ) {
+			return /^\d+(\.\d+)?$/.test( v ) ? v : null;
+		}
+		if ( 'signed' === kind ) {
+			if ( /^-?[\d.]+(px|rem|em)$/.test( v ) ) {
+				return v;
+			}
+			if ( /^-?\d+(\.\d+)?$/.test( v ) ) {
+				return v + 'em';
+			}
+			return null;
+		}
+		const one = function ( part ) {
+			if ( '0' === part || /^[\d.]+(%|px|rem|em)$/.test( part ) ) {
+				return part;
+			}
+			if ( /^\d+$/.test( part ) ) {
+				return part + 'px';
+			}
+			if ( /^\d+\.\d+$/.test( part ) ) {
+				return parseFloat( part ) >= 8 ? part + 'px' : part + 'rem';
+			}
+			return null;
+		};
+		if ( 'box' === kind ) {
+			const parts = v.split( /\s+/ );
+			if ( parts.length > 4 ) {
+				return null;
+			}
+			const out = [];
+			for ( let i = 0; i < parts.length; i++ ) {
+				const next = one( parts[ i ] );
+				if ( null === next || '' === next ) {
+					return null;
+				}
+				out.push( next );
+			}
+			return out.join( ' ' );
+		}
+		return one( v );
+	}
+
+	/**
+	 * Mark a length field when the typed value would be discarded on save.
+	 *
+	 * @param {HTMLInputElement} input Length field.
+	 */
+	function markLengthField( input ) {
+		const kind = input.getAttribute( 'data-tocguide-length' ) || 'size';
+		const next = normalizeLength( input.value, kind );
+		const invalid = null === next;
+		input.setAttribute( 'aria-invalid', invalid ? 'true' : 'false' );
+		let hint = input.parentNode.querySelector(
+			'.tocguide-field-hint[data-for="' + input.id + '"]'
+		);
+		if ( invalid ) {
+			if ( ! hint ) {
+				hint = document.createElement( 'p' );
+				hint.className = 'tocguide-field-hint';
+				hint.setAttribute( 'data-for', input.id );
+				if ( ! input.id ) {
+					input.id =
+						'tocguide-length-' +
+						Math.random().toString( 36 ).slice( 2, 8 );
+					hint.setAttribute( 'data-for', input.id );
+				}
+				hint.id = input.id + '-hint';
+				input.insertAdjacentElement( 'afterend', hint );
+				input.setAttribute( 'aria-describedby', hint.id );
+			}
+			hint.textContent = LENGTH_HINT[ kind ] || LENGTH_HINT.size;
+		} else if ( hint ) {
+			hint.remove();
+			input.removeAttribute( 'aria-describedby' );
+		}
+		return next;
 	}
 
 	/**
@@ -94,18 +197,43 @@
 			return;
 		}
 
-		const field = function ( key ) {
-			return form.querySelector(
+		const nodes = function ( key ) {
+			return form.querySelectorAll(
 				'[name="tocguide_settings[' + key + ']"]'
 			);
 		};
 		const value = function ( key ) {
-			const el = field( key );
-			return el ? el.value.trim() : '';
+			const list = nodes( key );
+			if ( ! list.length ) {
+				return '';
+			}
+			if ( 'radio' === list[ 0 ].type ) {
+				for ( let i = 0; i < list.length; i++ ) {
+					if ( list[ i ].checked ) {
+						return list[ i ].value.trim();
+					}
+				}
+				return '';
+			}
+			return list[ 0 ].value.trim();
 		};
 		const checked = function ( key ) {
-			const el = field( key );
-			return !! ( el && el.checked );
+			const list = nodes( key );
+			return !! ( list.length && list[ 0 ].checked );
+		};
+		const cssValue = function ( key ) {
+			const el = form.querySelector(
+				'[name="tocguide_settings[' + key + ']"]'
+			);
+			if ( ! el ) {
+				return '';
+			}
+			const kind = el.getAttribute( 'data-tocguide-length' );
+			if ( ! kind ) {
+				return value( key );
+			}
+			const next = markLengthField( el );
+			return null === next ? '' : next;
 		};
 
 		const stacks =
@@ -145,7 +273,7 @@
 		};
 
 		Object.keys( vars ).forEach( function ( key ) {
-			const raw = value( key );
+			const raw = cssValue( key );
 			if ( '' === raw ) {
 				nav.style.removeProperty( vars[ key ] );
 			} else {
@@ -181,6 +309,19 @@
 		nav.classList.toggle( 'is-compact', checked( 'auto_compact' ) );
 		nav.classList.toggle( 'is-no-markers', checked( 'auto_hide_markers' ) );
 
+		const colorKeys = [
+			'design_bg_color',
+			'design_text_color',
+			'design_link_color',
+			'design_accent_color',
+			'design_title_color',
+			'design_marker_color',
+		];
+		const hasColors = colorKeys.some( function ( key ) {
+			return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test( value( key ) );
+		} );
+		nav.classList.toggle( 'has-design-colors', hasColors );
+
 		const marker = value( 'design_marker_style' );
 		nav.classList.toggle( 'is-marker-square', 'square' === marker );
 		nav.classList.toggle( 'is-marker-plain', 'plain' === marker );
@@ -188,6 +329,129 @@
 		const shadow = value( 'design_shadow' );
 		nav.classList.toggle( 'has-shadow-soft', 'soft' === shadow );
 		nav.classList.toggle( 'has-shadow-medium', 'medium' === shadow );
+
+		const focus = value( 'focus_style' );
+		if ( 'bold' === focus || 'high-contrast' === focus ) {
+			nav.setAttribute( 'data-tocguide-focus', focus );
+		} else {
+			nav.removeAttribute( 'data-tocguide-focus' );
+		}
+	}
+
+	/**
+	 * Rewrite a length field to the value that will be saved.
+	 *
+	 * @param {HTMLInputElement} input Length field.
+	 */
+	function commitLengthField( input ) {
+		const kind = input.getAttribute( 'data-tocguide-length' );
+		if ( ! kind ) {
+			return;
+		}
+		const next = normalizeLength( input.value, kind );
+		if ( null !== next && next !== input.value.trim() ) {
+			input.value = next;
+			input.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+		}
+	}
+
+	/**
+	 * Keep section switches on this page so unsaved design changes stay put.
+	 *
+	 * @param {HTMLFormElement} form Settings form.
+	 */
+	function initSections( form ) {
+		const tabs = document.querySelectorAll( '.tocguide-admin__section' );
+		if ( ! tabs.length ) {
+			return;
+		}
+
+		const show = function ( tab ) {
+			const panelId = tab.getAttribute( 'aria-controls' );
+			tabs.forEach( function ( other ) {
+				const on = other === tab;
+				other.classList.toggle( 'is-active', on );
+				other.setAttribute( 'aria-selected', on ? 'true' : 'false' );
+			} );
+			document
+				.querySelectorAll( '[id^="tocguide-section-"]' )
+				.forEach( function ( panel ) {
+					panel.hidden = panel.id !== panelId;
+				} );
+
+			const section = ( panelId || '' ).replace(
+				'tocguide-section-',
+				''
+			);
+			if ( section && window.history && window.history.replaceState ) {
+				const url = new URL( window.location.href );
+				url.searchParams.set( 'section', section );
+				window.history.replaceState( null, '', url );
+			}
+			const referer = form.querySelector( '[name="_wp_http_referer"]' );
+			if ( referer && section ) {
+				try {
+					const ref = new URL(
+						referer.value,
+						window.location.origin
+					);
+					ref.searchParams.set( 'section', section );
+					referer.value = ref.pathname + ref.search;
+				} catch {
+					// Leave the referer WordPress printed.
+				}
+			}
+		};
+
+		tabs.forEach( function ( tab, index ) {
+			tab.addEventListener( 'click', function ( event ) {
+				event.preventDefault();
+				show( tab );
+			} );
+			tab.addEventListener( 'keydown', function ( event ) {
+				if (
+					'ArrowRight' !== event.key &&
+					'ArrowLeft' !== event.key &&
+					'Home' !== event.key &&
+					'End' !== event.key
+				) {
+					return;
+				}
+				event.preventDefault();
+				let next = index;
+				if ( 'ArrowRight' === event.key ) {
+					next = ( index + 1 ) % tabs.length;
+				} else if ( 'ArrowLeft' === event.key ) {
+					next = ( index - 1 + tabs.length ) % tabs.length;
+				} else if ( 'Home' === event.key ) {
+					next = 0;
+				} else {
+					next = tabs.length - 1;
+				}
+				tabs[ next ].focus();
+				show( tabs[ next ] );
+			} );
+		} );
+	}
+
+	let statusTimer = 0;
+
+	/**
+	 * Tell assistive tech the sample outline changed, after typing pauses.
+	 */
+	function announcePreview() {
+		const status = document.getElementById( 'tocguide-preview-status' );
+		if ( ! status ) {
+			return;
+		}
+		window.clearTimeout( statusTimer );
+		statusTimer = window.setTimeout( function () {
+			status.textContent = '';
+			window.setTimeout( function () {
+				status.textContent =
+					admin.previewUpdated || 'Outline preview updated.';
+			}, 30 );
+		}, 400 );
 	}
 
 	document.addEventListener( 'DOMContentLoaded', function () {
@@ -196,8 +460,32 @@
 
 		const form = document.querySelector( '.tocguide-admin__form' );
 		if ( form ) {
-			form.addEventListener( 'input', refreshPreview );
-			form.addEventListener( 'change', refreshPreview );
+			initSections( form );
+			form.addEventListener( 'input', function () {
+				refreshPreview();
+				announcePreview();
+			} );
+			form.addEventListener( 'change', function () {
+				refreshPreview();
+				announcePreview();
+			} );
+			form.querySelectorAll( '[data-tocguide-length]' ).forEach(
+				function ( input ) {
+					input.addEventListener( 'blur', function () {
+						commitLengthField( input );
+					} );
+				}
+			);
+		}
+
+		const preview = document.getElementById( 'tocguide-preview-nav' );
+		if ( preview ) {
+			preview.addEventListener( 'click', function ( event ) {
+				const link = event.target.closest( 'a' );
+				if ( link && preview.contains( link ) ) {
+					event.preventDefault();
+				}
+			} );
 		}
 
 		// Reading Guide sub-options depend on guide mode being on.

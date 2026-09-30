@@ -251,14 +251,18 @@ class TOCguide_Settings {
 	 */
 	private static function sanitize_css_length( $value ) {
 		$v = trim( (string) $value );
-		if ( '' === $v ) {
-			return '';
-		}
-		if ( '0' === $v ) {
-			return '0';
+		if ( '' === $v || '0' === $v ) {
+			return $v;
 		}
 		if ( preg_match( '/^[\d.]+(%|px|rem|em)$/', $v ) ) {
 			return $v;
+		}
+		// A whole number is pixels. A small decimal is rem (0.95 → 0.95rem).
+		if ( preg_match( '/^\d+$/', $v ) ) {
+			return $v . 'px';
+		}
+		if ( preg_match( '/^\d+\.\d+$/', $v ) ) {
+			return ( (float) $v >= 8 ) ? $v . 'px' : $v . 'rem';
 		}
 		return '';
 	}
@@ -274,11 +278,19 @@ class TOCguide_Settings {
 		if ( '' === $v ) {
 			return '';
 		}
-		$part = '(?:0|[\\d.]+(?:%|px|rem|em))';
-		if ( preg_match( '/^' . $part . '(?:\\s+' . $part . '){0,3}$/', $v ) ) {
-			return $v;
+		$parts = preg_split( '/\s+/', $v );
+		if ( ! is_array( $parts ) || count( $parts ) > 4 ) {
+			return '';
 		}
-		return '';
+		$out = array();
+		foreach ( $parts as $part ) {
+			$normalized = self::sanitize_css_length( $part );
+			if ( '' === $normalized ) {
+				return '';
+			}
+			$out[] = $normalized;
+		}
+		return implode( ' ', $out );
 	}
 
 	/**
@@ -312,7 +324,33 @@ class TOCguide_Settings {
 		if ( preg_match( '/^-?[\d.]+(px|rem|em)$/', $v ) ) {
 			return $v;
 		}
+		if ( preg_match( '/^-?\d+(\.\d+)?$/', $v ) ) {
+			return $v . 'em';
+		}
 		return '';
+	}
+
+	/**
+	 * Whether a saved colour should switch the outline off the dock fallback.
+	 *
+	 * @return bool
+	 */
+	public static function has_design_colors() {
+		$vars  = self::design_css_vars();
+		$props = array(
+			'--tocguide-bg',
+			'--tocguide-color',
+			'--tocguide-link-color',
+			'--tocguide-accent',
+			'--tocguide-title-color',
+			'--tocguide-marker-bg',
+		);
+		foreach ( $props as $prop ) {
+			if ( ! empty( $vars[ $prop ] ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
