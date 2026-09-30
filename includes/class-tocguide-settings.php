@@ -189,6 +189,7 @@ class TOCguide_Settings {
 			'showClose'           => ! empty( $settings['auto_show_close'] ),
 			'focusMode'           => ! empty( $settings['auto_focus_mode'] ),
 			'sticky'              => ! empty( $settings['auto_sticky'] ),
+			'fixedLeft'           => isset( $settings['auto_insert'] ) && 'fixed-left' === $settings['auto_insert'],
 			'compact'             => ! empty( $settings['auto_compact'] ),
 			'twoColumns'          => ! empty( $settings['auto_two_columns'] ),
 			'underlineLinks'      => ! empty( $settings['auto_underline'] ),
@@ -481,7 +482,7 @@ class TOCguide_Settings {
 		$max_height               = isset( $input['auto_max_height'] ) ? (int) $input['auto_max_height'] : 0;
 		$clean['auto_max_height'] = min( 800, max( 0, $max_height ) );
 
-		$allowed_insert       = array( 'none', 'before', 'after_first_heading' );
+		$allowed_insert       = array( 'none', 'before', 'after_first_heading', 'fixed-left' );
 		$insert               = isset( $input['auto_insert'] ) ? sanitize_key( $input['auto_insert'] ) : 'none';
 		$clean['auto_insert'] = in_array( $insert, $allowed_insert, true ) ? $insert : 'none';
 

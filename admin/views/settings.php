@@ -113,7 +113,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 				<h2><?php esc_html_e( 'Shortcode', 'tocguide' ); ?></h2>
 				<p><?php esc_html_e( 'Use this in classic content, page-builder text widgets, or a theme template (via do_shortcode):', 'tocguide' ); ?></p>
 				<p><code>[tocguide]</code></p>
-				<p><?php esc_html_e( 'Layout &amp; behavior:', 'tocguide' ); ?> <code>title</code>, <code>showtitle</code>, <code>titletag</code>, <code>h1</code>&ndash;<code>h6</code>, <code>ordered</code>, <code>numbering</code>, <code>markers</code>, <code>collapsible</code>, <code>collapsed</code>, <code>close="0"</code>, <code>focus="1"</code>, <code>sticky</code>, <code>compact</code>, <code>columns</code>, <code>underline</code>, <code>highlight</code>, <code>maxheight</code>, <code>min</code>, <code>smooth</code>, <code>style</code>, <code>theme="exclude|include"</code></p>
+				<p><?php esc_html_e( 'Layout &amp; behavior:', 'tocguide' ); ?> <code>title</code>, <code>showtitle</code>, <code>titletag</code>, <code>h1</code>&ndash;<code>h6</code>, <code>ordered</code>, <code>numbering</code>, <code>markers</code>, <code>collapsible</code>, <code>collapsed</code>, <code>close="0"</code>, <code>focus="1"</code>, <code>sticky</code>, <code>fixed="1"</code>, <code>compact</code>, <code>columns</code>, <code>underline</code>, <code>highlight</code>, <code>maxheight</code>, <code>min</code>, <code>smooth</code>, <code>style</code>, <code>theme="exclude|include"</code></p>
 			<p><?php esc_html_e( 'Reading Guide:', 'tocguide' ); ?> <code>preview="1"</code> <?php esc_html_e( '(hover tooltip)', 'tocguide' ); ?>, <code>guide="1"</code> <?php esc_html_e( '(full guide mode)', 'tocguide' ); ?>, <code>previews="1"</code>, <code>density="1"</code>, <code>readtime="1"</code>, <code>progress="1"</code>, <code>reactions="1"</code>, <code>citations="1"</code>, <code>citation="apa|mla|chicago|harvard|plain"</code></p>
 			<p><?php esc_html_e( 'Study tools:', 'tocguide' ); ?> <code>rprogress="1"</code> <?php esc_html_e( '(reading progress bar)', 'tocguide' ); ?>, <code>bookmark="1"</code> <?php esc_html_e( '(resume reading)', 'tocguide' ); ?>, <code>rnotes="1"</code> <?php esc_html_e( '(reader note pads per section)', 'tocguide' ); ?></p>
 			<p><?php esc_html_e( 'Export &amp; print:', 'tocguide' ); ?> <code>export="1"</code> <?php esc_html_e( '(adds Copy / .md / .doc / Print buttons)', 'tocguide' ); ?></p>
@@ -279,8 +279,10 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 							<fieldset>
 								<label><input type="radio" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_insert]" value="none" <?php checked( $settings['auto_insert'], 'none' ); ?>> <?php esc_html_e( 'Off - only show when the block or shortcode is added', 'tocguide' ); ?></label><br>
 								<label><input type="radio" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_insert]" value="before" <?php checked( $settings['auto_insert'], 'before' ); ?>> <?php esc_html_e( 'Top of content', 'tocguide' ); ?></label><br>
-								<label><input type="radio" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_insert]" value="after_first_heading" <?php checked( $settings['auto_insert'], 'after_first_heading' ); ?>> <?php esc_html_e( 'After the first heading', 'tocguide' ); ?></label>
+								<label><input type="radio" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_insert]" value="after_first_heading" <?php checked( $settings['auto_insert'], 'after_first_heading' ); ?>> <?php esc_html_e( 'After the first heading', 'tocguide' ); ?></label><br>
+								<label><input type="radio" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_insert]" value="fixed-left" <?php checked( $settings['auto_insert'], 'fixed-left' ); ?>> <?php esc_html_e( 'Fixed left', 'tocguide' ); ?></label>
 							</fieldset>
+							<p class="description"><?php esc_html_e( 'Fixed left pins the outline to the left edge on wide screens and starts the article beside it. On small screens it stays at the top of the content.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
 					<tr>

@@ -140,7 +140,7 @@ const canDock = () => {
 
 const applyDock = () => {
 	const first = document.querySelector(
-		'.wp-block-tocguide-table-of-contents, .tocguide'
+		'.wp-block-tocguide-table-of-contents.is-fixed-left, .tocguide.is-fixed-left'
 	);
 	if ( ! canDock() || ! first ) {
 		clearDock();

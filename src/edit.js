@@ -254,6 +254,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		showClose,
 		focusMode,
 		sticky,
+		fixedLeft,
 		compact,
 		twoColumns,
 		underlineLinks,
@@ -344,6 +345,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			shadow === 'soft' ? 'has-shadow-soft' : '',
 			shadow === 'medium' ? 'has-shadow-medium' : '',
 			sticky ? 'is-sticky' : '',
+			fixedLeft ? 'is-fixed-left' : '',
 			collapsible ? 'is-collapsible' : '',
 			compact ? 'is-compact' : '',
 			hideMarkers ? 'is-no-markers' : '',
@@ -613,6 +615,18 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 						help={ __(
 							'Keeps the outline in view in a sidebar or wide column.',
+							'tocguide'
+						) }
+					/>
+					<ToggleControl
+						__nextHasNoMarginBottom
+						label={ __( 'Fixed left', 'tocguide' ) }
+						checked={ !! fixedLeft }
+						onChange={ ( value ) =>
+							setAttributes( { fixedLeft: value } )
+						}
+						help={ __(
+							'On wide screens, pins this outline to the left edge. Settings → Position → Fixed left does this for every outline.',
 							'tocguide'
 						) }
 					/>

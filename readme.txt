@@ -25,7 +25,7 @@ TOCguide adds a Table of Contents block to the WordPress block editor. It is an 
 * Smooth scroll with a configurable offset for sticky headers
 * Collapsible outline and optional sticky positioning
 * Close button hides the outline for the visit; Show outline brings it back
-* On wide screens the outline docks to the left edge of the window, clear of the article
+* On wide screens, Settings → TOCguide → Auto-insert → Position → Fixed left docks the outline to the left edge. The article starts beside it.
 * Optional Focus control dims every section except the one in view
 * Scroll-spy highlights the section currently in view
 * Hide bullets, two-column layout, compact spacing, max height with scroll
@@ -217,7 +217,8 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 == Changelog ==
 
 = 1.6.5 =
-* On screens 1100px and wider, the outline docks to the left edge of the window and the article starts beside it.
+* Settings → Auto-insert → Position includes Fixed left. On wide screens the outline docks to the left edge and the article starts beside it.
+* Close and expand controls are circles, with more space around the outline rows and header buttons.
 * Docked outline uses a dark panel, a thick green border, and right-side rounded corners. Text, links, and controls meet WCAG AA contrast.
 * Outline items, read-time, and previews have more space, and secondary text stays dark enough to read.
 

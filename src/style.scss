@@ -10,7 +10,7 @@
 	border-style: var(--tocguide-border-style, solid);
 	border-color: var(--tocguide-border-color, var(--tocguide-line, #e2e8f0));
 	border-radius: var(--tocguide-radius, 8px);
-	padding: var(--tocguide-padding, 1.35rem 1.5rem);
+	padding: var(--tocguide-padding, 1.5rem 1.75rem);
 	background: var(--tocguide-bg, color-mix(in srgb, currentcolor 4%, transparent));
 	color: var(--tocguide-color, inherit);
 	font-family: var(--tocguide-font-family, inherit);
@@ -26,15 +26,16 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 0.75rem;
-	margin: 0 0 0.65rem;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin: 0 0 1rem;
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__header-actions,
 .tocguide .tocguide__header-actions {
 	display: flex;
 	align-items: center;
-	gap: 0.4rem;
+	gap: 0.7rem;
 	margin-inline-start: auto;
 	flex-shrink: 0;
 }
@@ -52,6 +53,7 @@
 
 .wp-block-tocguide-table-of-contents .tocguide__header .tocguide__title,
 .tocguide .tocguide__header .tocguide__title {
+	flex: 1 1 9rem;
 	margin: 0;
 }
 
@@ -84,18 +86,26 @@
 .wp-block-tocguide-table-of-contents .tocguide__close,
 .tocguide .tocguide__toggle,
 .tocguide .tocguide__close {
-	width: 2rem;
-	height: 2rem;
+	box-sizing: border-box;
+	width: 2.75rem;
+	height: 2.75rem;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	max-width: 2.75rem;
+	max-height: 2.75rem;
 	padding: 0;
+	border-radius: 50%;
+	aspect-ratio: 1;
+	line-height: 0;
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__focus,
 .wp-block-tocguide-table-of-contents .tocguide__restore,
 .tocguide .tocguide__focus,
 .tocguide .tocguide__restore {
-	gap: 0.35rem;
-	height: 2rem;
-	padding: 0 0.75rem;
+	gap: 0.4rem;
+	height: 2.75rem;
+	padding: 0 1rem;
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__restore[hidden],
@@ -177,7 +187,7 @@
 .wp-block-tocguide-table-of-contents li,
 .tocguide .tocguide__item,
 .tocguide li {
-	margin: var(--tocguide-item-gap, 0.4rem) 0;
+	margin: var(--tocguide-item-gap, 0.55rem) 0;
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__link,
@@ -426,7 +436,7 @@
 	display: flex;
 	align-items: center;
 	flex-wrap: nowrap;
-	gap: 0.45rem 0.6rem;
+	gap: 0.65rem 0.85rem;
 }
 
 .wp-block-tocguide-table-of-contents .tocguide__item-tools,
@@ -1181,7 +1191,7 @@ html.tocguide-is-focusing .tocguide-focus-dim {
 		max-height: min(70vh, 36rem);
 		box-sizing: border-box;
 		margin: 0;
-		padding: 1.2rem 1.15rem 1.2rem 1rem;
+		padding: 1.45rem 1.4rem 1.45rem 1.25rem;
 		overflow-x: hidden;
 		overflow-y: auto;
 		overscroll-behavior: contain;
@@ -1207,7 +1217,7 @@ html.tocguide-is-focusing .tocguide-focus-dim {
 		--tocguide-dock-marker-bg: #b6f3d4;
 
 		.tocguide__header {
-			margin-bottom: 0.85rem;
+			margin-bottom: 1.15rem;
 		}
 
 		.tocguide__title {
@@ -1216,7 +1226,7 @@ html.tocguide-is-focusing .tocguide-focus-dim {
 
 		.tocguide__link,
 		a {
-			padding-block: 0.28rem;
+			padding-block: 0.45rem;
 			color: var(--tocguide-dock-ink);
 		}
 
@@ -1232,7 +1242,7 @@ html.tocguide-is-focusing .tocguide-focus-dim {
 		}
 
 		.tocguide__item {
-			margin-block: 0.15rem;
+			margin-block: 0.4rem;
 		}
 
 		.tocguide__item.is-read > .tocguide__item-row > .tocguide__link {

@@ -900,6 +900,13 @@ class TOCguide_Headings {
 		if ( ! empty( $attributes['sticky'] ) ) {
 			$classes[] = 'is-sticky';
 		}
+		$fixed_left = ! empty( $attributes['fixedLeft'] );
+		if ( ! $fixed_left && isset( $settings['auto_insert'] ) && 'fixed-left' === $settings['auto_insert'] ) {
+			$fixed_left = true;
+		}
+		if ( $fixed_left ) {
+			$classes[] = 'is-fixed-left';
+		}
 		if ( ! empty( $attributes['compact'] ) ) {
 			$classes[] = 'is-compact';
 		}

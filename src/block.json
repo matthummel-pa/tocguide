@@ -95,6 +95,7 @@
 		"showClose": { "type": "boolean", "default": true },
 		"focusMode": { "type": "boolean", "default": false },
 		"sticky": { "type": "boolean", "default": false },
+		"fixedLeft": { "type": "boolean", "default": false },
 		"compact": { "type": "boolean", "default": false },
 		"twoColumns": { "type": "boolean", "default": false },
 		"underlineLinks": { "type": "boolean", "default": false },

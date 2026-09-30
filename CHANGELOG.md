@@ -6,7 +6,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## [1.6.5] - 2026-09-30
 
 ### Changed
-- On screens 1100px and wider, the outline docks to the left edge of the window. The article starts beside it, so the panel does not cover the text.
+- Settings → TOCguide → Auto-insert → Position includes Fixed left. On screens 1100px and wider, that choice docks the outline to the left edge. The article starts beside it, so the panel does not cover the text.
+- Close and expand controls are circles, with more space inside the button and between outline rows.
 - The docked outline uses a dark panel, a 3px green border, and rounded corners on the side away from the screen edge.
 - Title, links, the active section, markers, and buttons on the dock meet WCAG AA contrast.
 - List items have more space. Read-time, previews, and sections already read stay dark enough to read.
