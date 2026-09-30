@@ -1597,7 +1597,8 @@ html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__header
 html.tocguide-is-focusing .tocguide-focus-paper .tocguide__focus,
 html.tocguide-is-focusing .tocguide .tocguide__focus,
 html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__focus,
-html.tocguide-is-focusing .tocguide__focus[aria-pressed="true"] {
+html.tocguide-is-focusing .tocguide__focus[aria-pressed="true"],
+html.tocguide-is-focusing .tocguide__focus-exit {
 	position: fixed !important; /* stylelint-disable-line declaration-no-important */
 	z-index: 100002 !important; /* stylelint-disable-line declaration-no-important */
 	inset-block: auto 1rem !important; /* stylelint-disable-line declaration-no-important */
@@ -1607,8 +1608,13 @@ html.tocguide-is-focusing .tocguide__focus[aria-pressed="true"] {
 	color: #fff !important; /* stylelint-disable-line declaration-no-important */
 	opacity: 1;
 	visibility: visible;
+	pointer-events: auto;
 	transition: none;
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+html.tocguide-is-focusing .tocguide__focus-exit[hidden] {
+	display: none !important; /* stylelint-disable-line declaration-no-important */
 }
 
 html.tocguide-is-focusing .tocguide-focus-paper .tocguide__focus span,

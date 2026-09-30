@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.11
+Stable tag: 1.6.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -215,6 +215,9 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 
 == Changelog ==
 
+= 1.6.12 =
+* Focused reading keeps a Show page control (and Escape) so you can restore the rest of the page after clicking Focus.
+
 = 1.6.11 =
 * Fixed left stays inside the main content area. The rest of the page does not shift.
 * The left outline has no scrollbar. Focus, collapse, close, and Resume sit on one line under the title.
@@ -350,6 +353,9 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 * Heading IDs via WP_HTML_Tag_Processor; custom anchors respected.
 
 == Upgrade Notice ==
+
+= 1.6.12 =
+Focused reading now keeps a Show page control. Press Escape or click it to restore the rest of the page.
 
 = 1.5.0 =
 One `tocguide` identity for PHP, CSS, the block, shortcode, and settings. Re-insert the Table of Contents block and re-save Settings if you used an earlier zip.

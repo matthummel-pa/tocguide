@@ -1082,7 +1082,7 @@ class TOCguide_Headings {
 			}
 			$html .= '<div class="tocguide__header-actions">';
 			if ( $focus_mode ) {
-				$html .= '<button type="button" class="tocguide__focus" aria-pressed="false" aria-label="' . esc_attr__( 'Focused reading', 'tocguide' ) . '">';
+				$html .= '<button type="button" class="tocguide__focus" aria-pressed="false" aria-label="' . esc_attr__( 'Focused reading', 'tocguide' ) . '" data-tocguide-restore="' . esc_attr__( 'Show page', 'tocguide' ) . '">';
 				$html .= self::icon_svg( 'focus' );
 				$html .= '<span>' . esc_html__( 'Focus', 'tocguide' ) . '</span>';
 				$html .= '</button>';

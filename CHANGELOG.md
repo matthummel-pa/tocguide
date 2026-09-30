@@ -3,6 +3,11 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.12] - 2026-09-30
+
+### Fixed
+- Focused reading no longer hides the control that turns it off. Click **Show page** (or press Escape) to restore the header, sidebar, footer, and outline.
+
 ## [1.6.11] - 2026-09-30
 
 ### Changed

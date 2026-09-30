@@ -668,7 +668,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { focusMode: value } )
 						}
 						help={ __(
-							'Adds a Focus control. Turning it on clears the page so only the post copy remains, on a plain sheet.',
+							'Adds a Focus control. Turning it on clears chrome so the post copy sits on a plain sheet. Click Show page or press Escape to bring the rest of the page back.',
 							'tocguide'
 						) }
 					/>

@@ -1,6 +1,6 @@
 {
 	"name": "tocguide",
-	"version": "1.6.11",
+	"version": "1.6.12",
 	"description": "A server-rendered Table of Contents block for the WordPress editor.",
 	"author": {
 		"name": "Matt Hummel",
