@@ -4,3 +4,9 @@ build/
 *.zip
 .DS_Store
 svn-tocguide/
+
+# Claude Code personal settings
+.claude/settings.local.json
+
+# Local QA reports (Lighthouse)
+lighthouse-report*

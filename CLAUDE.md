@@ -41,6 +41,12 @@ Block Directory (those cannot have wp-admin UI).
   See `.cursor/rules/brand-typography.mdc`. The front-end TOC block
   inherits the theme; do not inject a branded (or serif) font there.
 
+## Review setup (wp-dev-kit)
+- A Claude Code hook runs `phpcs` (this repo's `phpcs.xml.dist`, PHP 7.4+) after every PHP edit. Fix what it reports.
+- `python3 .github/scripts/wp-review` checks changed lines; CI's PHPCS job checks the whole plugin.
+- Before a PR: `composer phpcs`, `npm run lint:js`, `npm run lint:css`, `npm run build`, then ask the
+  `wp-security-reviewer` subagent to review the diff. `.cursor/rules/wp-review.mdc` has the review rules.
+
 ## How it works
 1. `TOCguide_Headings::get_all()` parses the post with `parse_blocks()` and builds
    ONE slug-stamped list (custom `anchor` / existing `id` wins).
