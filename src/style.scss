@@ -1218,7 +1218,7 @@ html.tocguide-is-focusing .tocguide-focus-hide {
 
 	.tocguide-dock-host {
 		display: grid;
-		grid-template-columns: max-content minmax(0, 1fr);
+		grid-template-columns: 18rem minmax(0, 1fr);
 		column-gap: 1.25rem;
 		align-items: start;
 	}
@@ -1242,8 +1242,8 @@ html.tocguide-is-focusing .tocguide-focus-hide {
 		inset-inline-start: auto;
 		top: 1.25rem;
 		transform: none;
-		width: max-content;
-		max-width: 22rem;
+		width: auto;
+		max-width: none;
 		max-height: none;
 		box-sizing: border-box;
 		margin: 0;
