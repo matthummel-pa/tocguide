@@ -82,40 +82,40 @@ const remembered = ( key ) => {
 	}
 };
 
-// Desktop only: pin the first outline to the left edge of the viewport and
-// reserve the same width in the page so the article starts beside it.
-const DOCK_GAP = 20;
+// Desktop only: keep the outline in a left column of <main>.
+// The page canvas (header, footer, body padding) stays put.
 let dockNav = null;
-let dockObserver = null;
 let dockQuery = null;
+let dockHost = null;
+let dockPlaceholder = null;
+let resumeHome = null;
 
 const clearDock = () => {
 	document.documentElement.classList.remove( 'tocguide-has-dock' );
 	document.documentElement.style.removeProperty( '--tocguide-dock-offset' );
 	if ( dockNav ) {
+		const resume = dockNav.querySelector( '.tocguide__resume-btn' );
+		if (
+			resume &&
+			resumeHome &&
+			resumeHome.parent &&
+			resume.parentElement !== resumeHome.parent
+		) {
+			resumeHome.parent.insertBefore( resume, resumeHome.next );
+		}
 		dockNav.classList.remove( 'is-docked' );
+		if ( dockPlaceholder && dockPlaceholder.parentNode ) {
+			dockPlaceholder.parentNode.insertBefore( dockNav, dockPlaceholder );
+			dockPlaceholder.remove();
+		}
 	}
-	if ( dockObserver ) {
-		dockObserver.disconnect();
-		dockObserver = null;
-	}
+	dockPlaceholder = null;
+	resumeHome = null;
 	dockNav = null;
-};
-
-const measureDock = () => {
-	if (
-		! dockNav ||
-		! dockNav.classList.contains( 'is-docked' ) ||
-		document.documentElement.classList.contains( 'tocguide-is-focusing' )
-	) {
-		return;
+	if ( dockHost ) {
+		dockHost.classList.remove( 'tocguide-dock-host' );
+		dockHost = null;
 	}
-	const width = dockNav.getBoundingClientRect().width;
-	const offset = Math.ceil( width + DOCK_GAP );
-	document.documentElement.style.setProperty(
-		'--tocguide-dock-offset',
-		offset + 'px'
-	);
 };
 
 const dockMedia = () => {
@@ -142,25 +142,56 @@ const canDock = () => {
 	return Boolean( query && query.matches );
 };
 
+const dockHostOf = ( nav ) =>
+	nav.closest( 'main' ) ||
+	document.querySelector( 'main' ) ||
+	nav.closest( 'article' );
+
+const placeInHost = ( nav, host ) => {
+	if ( nav.parentElement === host ) {
+		return;
+	}
+	if ( ! dockPlaceholder ) {
+		dockPlaceholder = document.createComment( 'tocguide-dock' );
+	}
+	if ( ! dockPlaceholder.parentNode && nav.parentNode ) {
+		nav.parentNode.insertBefore( dockPlaceholder, nav );
+	}
+	host.insertBefore( nav, host.firstChild );
+};
+
+const lineUpDockButtons = ( nav ) => {
+	const actions = nav.querySelector( '.tocguide__header-actions' );
+	const resume = nav.querySelector( '.tocguide__resume-btn' );
+	if ( ! actions || ! resume || resume.parentElement === actions ) {
+		return;
+	}
+	resumeHome = {
+		parent: resume.parentElement,
+		next: resume.nextSibling,
+	};
+	actions.appendChild( resume );
+};
+
 const applyDock = () => {
 	const first = document.querySelector(
 		'.wp-block-tocguide-table-of-contents.is-fixed-left, .tocguide.is-fixed-left'
 	);
-	if ( ! canDock() || ! first ) {
+	const host = first ? dockHostOf( first ) : null;
+	if ( ! canDock() || ! first || ! host ) {
 		clearDock();
 		return;
 	}
 	if ( dockNav && dockNav !== first ) {
-		dockNav.classList.remove( 'is-docked' );
+		clearDock();
 	}
 	dockNav = first;
-	dockNav.classList.add( 'is-docked' );
+	dockHost = host;
+	placeInHost( first, host );
+	lineUpDockButtons( first );
+	first.classList.add( 'is-docked' );
+	host.classList.add( 'tocguide-dock-host' );
 	document.documentElement.classList.add( 'tocguide-has-dock' );
-	measureDock();
-	if ( ! dockObserver && typeof window.ResizeObserver !== 'undefined' ) {
-		dockObserver = new window.ResizeObserver( () => measureDock() );
-		dockObserver.observe( dockNav );
-	}
 };
 
 const initClose = ( nav ) => {
@@ -178,7 +209,6 @@ const initClose = ( nav ) => {
 			remember( key, true );
 			announce( nav, 'Table of contents hidden.' );
 			restore.focus();
-			measureDock();
 		}
 	};
 
@@ -188,7 +218,6 @@ const initClose = ( nav ) => {
 		remember( key, false );
 		announce( nav, 'Table of contents shown.' );
 		button.focus();
-		measureDock();
 	};
 
 	if ( remembered( key ) ) {
@@ -354,7 +383,6 @@ const initFocus = ( nav ) => {
 		if ( focusNav === nav ) {
 			focusNav = null;
 		}
-		window.requestAnimationFrame( () => measureDock() );
 		if ( persist ) {
 			remember( key, false );
 			announce( nav, 'Focused reading off.' );

@@ -3,6 +3,12 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.11] - 2026-09-30
+
+### Changed
+- Fixed left stays inside the main content area. The rest of the page does not shift.
+- The left outline has no scrollbar. Focus, collapse, close, and Resume sit on one line under the title.
+
 ## [1.6.10] - 2026-09-30
 
 ### Changed

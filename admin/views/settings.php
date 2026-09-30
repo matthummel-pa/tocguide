@@ -270,7 +270,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 								<label><input type="radio" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_insert]" value="after_first_heading" <?php checked( $settings['auto_insert'], 'after_first_heading' ); ?>> <?php esc_html_e( 'After the first heading', 'tocguide' ); ?></label><br>
 								<label><input type="radio" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_insert]" value="fixed-left" <?php checked( $settings['auto_insert'], 'fixed-left' ); ?>> <?php esc_html_e( 'Fixed left', 'tocguide' ); ?></label>
 							</fieldset>
-							<p class="description"><?php esc_html_e( 'Fixed left pins the outline to the left edge on wide screens and starts the article beside it. On small screens it stays at the top of the content.', 'tocguide' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Fixed left keeps the outline on the left of the main content on wide screens. The rest of the page stays put. On small screens it stays at the top of the content.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
 					<tr>

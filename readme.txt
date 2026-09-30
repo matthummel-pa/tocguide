@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.10
+Stable tag: 1.6.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,6 @@ TOCguide adds a Table of Contents block to the WordPress block editor. It is an 
 * Smooth scroll with a configurable offset for sticky headers
 * Collapsible outline and optional sticky positioning
 * Close button hides the outline for the visit; Show outline brings it back
-* On wide screens, Settings → TOCguide → Auto-insert → Position → Fixed left docks the outline to the left edge. The article starts beside it.
 * Optional Focus control clears the page so only the post copy remains, on a plain sheet
 * Scroll-spy highlights the section currently in view
 * Hide bullets, two-column layout, compact spacing, max height with scroll
@@ -215,6 +214,10 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 4. Docs & Support tab in wp-admin (links to the documentation site).
 
 == Changelog ==
+
+= 1.6.11 =
+* Fixed left stays inside the main content area. The rest of the page does not shift.
+* The left outline has no scrollbar. Focus, collapse, close, and Resume sit on one line under the title.
 
 = 1.6.10 =
 * Design changes show in a preview that stays on screen. A whole number such as 15 is saved as 15px, and a small decimal such as 0.95 is saved as 0.95rem, so a size you type is the size that prints.

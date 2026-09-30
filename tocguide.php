@@ -3,7 +3,7 @@
  * Plugin Name:       TOCguide
  * Plugin URI:        https://github.com/matthummel-pa/tocguide
  * Description:       A lightweight Table of Contents block that auto-generates a linked outline from your post headings. Independent plugin by Matt Hummel — not affiliated with any other product.
- * Version:           1.6.10
+ * Version:           1.6.11
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            Matt Hummel
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TOCGUIDE_VERSION', '1.6.10' );
+define( 'TOCGUIDE_VERSION', '1.6.11' );
 define( 'TOCGUIDE_FILE', __FILE__ );
 define( 'TOCGUIDE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TOCGUIDE_URL', plugin_dir_url( __FILE__ ) );

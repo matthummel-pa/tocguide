@@ -626,7 +626,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { fixedLeft: value } )
 						}
 						help={ __(
-							'On wide screens, pins this outline to the left edge. Settings → Position → Fixed left does this for every outline.',
+							'On wide screens, keeps this outline on the left of the main content. The rest of the page stays put. Settings → Position → Fixed left does this for every outline.',
 							'tocguide'
 						) }
 					/>
