@@ -3,6 +3,11 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.13] - 2026-09-30
+
+### Changed
+- **Show page** in focused reading is a centered floating control with an expand icon, a restore hint, and an Esc keycap so it is obvious how to leave Focus.
+
 ## [1.6.12] - 2026-09-30
 
 ### Fixed

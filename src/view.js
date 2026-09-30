@@ -376,6 +376,68 @@ const focusRestoreText = ( button ) =>
 	button.getAttribute( 'data-tocguide-restore' ) ||
 	__( 'Show page', 'tocguide' );
 
+const appendFocusExitGlyph = ( host ) => {
+	const svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
+	svg.setAttribute( 'class', 'tocguide__svg' );
+	svg.setAttribute( 'viewBox', '0 0 24 24' );
+	svg.setAttribute( 'width', '16' );
+	svg.setAttribute( 'height', '16' );
+	svg.setAttribute( 'fill', 'none' );
+	svg.setAttribute( 'aria-hidden', 'true' );
+	svg.setAttribute( 'focusable', 'false' );
+	[
+		'M8.25 3.5H5.5A2 2 0 0 0 3.5 5.5v2.75',
+		'M15.75 3.5H18.5A2 2 0 0 1 20.5 5.5v2.75',
+		'M8.25 20.5H5.5A2 2 0 0 1 3.5 18.5v-2.75',
+		'M15.75 20.5H18.5A2 2 0 0 0 20.5 18.5v-2.75',
+		'M9.25 9.25h5.5v5.5h-5.5z',
+	].forEach( ( d ) => {
+		const path = document.createElementNS(
+			'http://www.w3.org/2000/svg',
+			'path'
+		);
+		path.setAttribute( 'd', d );
+		path.setAttribute( 'stroke', 'currentColor' );
+		path.setAttribute( 'stroke-width', '1.6' );
+		path.setAttribute( 'stroke-linecap', 'round' );
+		path.setAttribute( 'stroke-linejoin', 'round' );
+		svg.appendChild( path );
+	} );
+	host.appendChild( svg );
+};
+
+const fillFocusExit = ( exit, restore ) => {
+	if ( exit.dataset.tocguideRestore === restore && exit.childElementCount ) {
+		return;
+	}
+	exit.dataset.tocguideRestore = restore;
+	exit.replaceChildren();
+
+	const icon = document.createElement( 'span' );
+	icon.className = 'tocguide__focus-exit-icon';
+	icon.setAttribute( 'aria-hidden', 'true' );
+	appendFocusExitGlyph( icon );
+
+	const copy = document.createElement( 'span' );
+	copy.className = 'tocguide__focus-exit-copy';
+	const label = document.createElement( 'span' );
+	label.className = 'tocguide__focus-exit-label';
+	label.textContent = restore;
+	const detail = document.createElement( 'span' );
+	detail.className = 'tocguide__focus-exit-detail';
+	detail.textContent = __( 'Restores the rest of the page', 'tocguide' );
+	copy.append( label, detail );
+
+	const hint = document.createElement( 'span' );
+	hint.className = 'tocguide__focus-exit-kbd';
+	hint.setAttribute( 'aria-hidden', 'true' );
+	hint.textContent = 'Esc';
+
+	exit.append( icon, copy, hint );
+	exit.setAttribute( 'aria-label', restore );
+	exit.setAttribute( 'aria-keyshortcuts', 'Escape' );
+};
+
 const ensureFocusExit = () => {
 	let exit = document.getElementById( FOCUS_EXIT_ID );
 	if ( exit ) {
@@ -384,7 +446,7 @@ const ensureFocusExit = () => {
 	exit = document.createElement( 'button' );
 	exit.type = 'button';
 	exit.id = FOCUS_EXIT_ID;
-	exit.className = 'tocguide__focus tocguide__focus-exit';
+	exit.className = 'tocguide__focus-exit';
 	exit.hidden = true;
 	document.body.appendChild( exit );
 	exit.addEventListener( 'click', () => {
@@ -438,10 +500,8 @@ const syncFocusChrome = ( on ) => {
 		? focusRestoreText( source )
 		: __( 'Show page', 'tocguide' );
 	const exit = ensureFocusExit();
+	fillFocusExit( exit, restore );
 	exit.hidden = false;
-	exit.setAttribute( 'aria-pressed', 'true' );
-	exit.setAttribute( 'aria-label', restore );
-	exit.textContent = restore;
 };
 
 const onFocusKey = ( event ) => {

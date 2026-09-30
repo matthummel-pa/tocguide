@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.12
+Stable tag: 1.6.13
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -215,6 +215,9 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 
 == Changelog ==
 
+= 1.6.13 =
+* Show page in focused reading is a floating control with an expand icon, a short restore hint, and an Esc keycap so it is obvious how to leave Focus.
+
 = 1.6.12 =
 * Focused reading keeps a Show page control (and Escape) so you can restore the rest of the page after clicking Focus.
 
@@ -353,6 +356,9 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 * Heading IDs via WP_HTML_Tag_Processor; custom anchors respected.
 
 == Upgrade Notice ==
+
+= 1.6.13 =
+Show page is easier to find in focused reading. Click it or press Escape to restore the rest of the page.
 
 = 1.6.12 =
 Focused reading now keeps a Show page control. Press Escape or click it to restore the rest of the page.
