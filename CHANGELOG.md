@@ -3,6 +3,16 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.8] - 2026-09-30
+
+### Fixed
+- The left-edge outline stays open, so the heading links stay on screen. Start collapsed still applies to an outline inside the content. Collapsing hides the list and the tools together.
+
+### Changed
+- Desktop, tablet, and mobile share one size for type, markers, and header buttons.
+- On small screens the outline uses less padding and tighter row spacing, unless a Design setting supplies those values.
+- Settings → TOCguide → Design includes the style preset. Colours, type size, title size, padding, and item spacing apply on every outline, including the left-edge panel.
+
 ## [1.6.7] - 2026-09-30
 
 ### Changed

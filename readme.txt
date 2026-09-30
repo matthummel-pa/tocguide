@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.7
+Stable tag: 1.6.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -215,6 +215,11 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 4. Docs & Support tab in wp-admin (links to the documentation site).
 
 == Changelog ==
+
+= 1.6.8 =
+* The left-edge outline stays open, so the heading links stay on screen. Collapsing hides the list and the tools together.
+* Desktop, tablet, and mobile share one size for type, markers, and header buttons. Small screens use less padding unless Design sets a padding.
+* Settings → TOCguide → Design sets the style, colours, type size, and spacing, including on the left-edge outline. A size you enter is the size that prints.
 
 = 1.6.7 =
 * On tablet and desktop, a top-of-content outline uses slightly smaller type, markers, and padding so the article keeps more of the screen.

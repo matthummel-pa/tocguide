@@ -886,9 +886,6 @@ class TOCguide_Headings {
 		if ( ! empty( $attributes['collapsible'] ) ) {
 			$classes[] = 'is-collapsible';
 		}
-		if ( ! empty( $attributes['collapsedDefault'] ) ) {
-			$classes[] = 'is-collapsed';
-		}
 		$show_close = ! array_key_exists( 'showClose', $attributes ) || ! empty( $attributes['showClose'] );
 		$focus_mode = ! empty( $attributes['focusMode'] );
 		if ( $show_close ) {
@@ -906,6 +903,29 @@ class TOCguide_Headings {
 		}
 		if ( $fixed_left ) {
 			$classes[] = 'is-fixed-left';
+		}
+
+		/*
+		 * The left-edge panel stays open. A collapsed dock hides the
+		 * headings and leaves only the title and tools.
+		 */
+		if ( ! empty( $attributes['collapsedDefault'] ) && ! $fixed_left ) {
+			$classes[] = 'is-collapsed';
+		}
+		$design_vars        = TOCguide_Settings::design_css_vars();
+		$design_color_props = array(
+			'--tocguide-bg',
+			'--tocguide-color',
+			'--tocguide-link-color',
+			'--tocguide-accent',
+			'--tocguide-title-color',
+			'--tocguide-marker-bg',
+		);
+		foreach ( $design_color_props as $design_prop ) {
+			if ( ! empty( $design_vars[ $design_prop ] ) ) {
+				$classes[] = 'has-design-colors';
+				break;
+			}
 		}
 		if ( ! empty( $attributes['compact'] ) ) {
 			$classes[] = 'is-compact';
@@ -981,7 +1001,7 @@ class TOCguide_Headings {
 			$style_parts[] = '--tocguide-max-height:' . $max_height . 'px';
 		}
 
-		foreach ( TOCguide_Settings::design_css_vars() as $css_prop => $val ) {
+		foreach ( $design_vars as $css_prop => $val ) {
 			if ( '' !== $val ) {
 				$style_parts[] = $css_prop . ':' . $val;
 			}
@@ -1079,7 +1099,7 @@ class TOCguide_Headings {
 				$html .= '</button>';
 			}
 			if ( ! empty( $attributes['collapsible'] ) ) {
-				$expanded = empty( $attributes['collapsedDefault'] ) ? 'true' : 'false';
+				$expanded = ( empty( $attributes['collapsedDefault'] ) || $fixed_left ) ? 'true' : 'false';
 				$html    .= '<button type="button" class="tocguide__toggle" aria-expanded="' . esc_attr( $expanded ) . '">';
 				$html    .= '<span class="tocguide__visually-hidden">' . esc_html__( 'Toggle table of contents', 'tocguide' ) . '</span>';
 				$html    .= '<span class="tocguide__toggle-icon" aria-hidden="true">' . self::icon_svg( 'chevron' ) . '</span>';

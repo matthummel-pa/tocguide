@@ -367,23 +367,9 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="tocguide-auto-style"><?php esc_html_e( 'Style', 'tocguide' ); ?></label></th>
+						<th scope="row"><?php esc_html_e( 'Style', 'tocguide' ); ?></th>
 						<td>
-							<select name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_style]" id="tocguide-auto-style">
-								<?php
-								$tocguide_styles = array(
-									'default'   => __( 'Default', 'tocguide' ),
-									'minimal'   => __( 'Minimal', 'tocguide' ),
-									'boxed'     => __( 'Boxed', 'tocguide' ),
-									'underline' => __( 'Underline', 'tocguide' ),
-									'card'      => __( 'Card', 'tocguide' ),
-								);
-								foreach ( $tocguide_styles as $tocguide_slug => $tocguide_label ) :
-									?>
-									<option value="<?php echo esc_attr( $tocguide_slug ); ?>" <?php selected( $settings['auto_style'], $tocguide_slug ); ?>><?php echo esc_html( $tocguide_label ); ?></option>
-								<?php endforeach; ?>
-							</select>
-							<p class="description"><?php esc_html_e( 'Default keeps the bordered box. Minimal drops the border and shadow. Boxed adds an inner frame. Underline is a top rule. Card is a floating panel with a shadow. Compact, below, tightens padding and type on any of these.', 'tocguide' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Default, Minimal, Boxed, Underline, and Card are on the Design tab. Compact, below, tightens padding and type on any of them.', 'tocguide' ); ?></p>
 						</td>
 					</tr>
 					<tr>
@@ -422,7 +408,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 								</label><br>
 								<label>
 									<input type="checkbox" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_collapsed]" value="1" <?php checked( $settings['auto_collapsed'], 1 ); ?>>
-									<?php esc_html_e( 'Start collapsed', 'tocguide' ); ?>
+									<?php esc_html_e( 'Start collapsed. The left-edge outline stays open so the headings stay on screen.', 'tocguide' ); ?>
 								</label><br>
 								<label>
 									<input type="checkbox" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_show_close]" value="1" <?php checked( $settings['auto_show_close'], 1 ); ?>>
@@ -466,9 +452,29 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 			<section class="tocguide-card" id="tocguide-section-design"<?php echo 'design' === $tocguide_section ? '' : ' hidden'; ?>>
 				<h2><?php esc_html_e( 'Design &amp; Appearance', 'tocguide' ); ?></h2>
 				<p class="description">
-					<?php esc_html_e( 'Global visual defaults. Leave a field empty to keep the built-in preset. Per-block color, type, and spacing in the editor still win.', 'tocguide' ); ?>
+					<?php esc_html_e( 'These choices apply on desktop, tablet, and mobile, including the left-edge outline. A size or colour you enter is the one that prints. Leave a size empty to keep the built-in value. Per-block color, type, and spacing in the editor still win.', 'tocguide' ); ?>
 				</p>
 				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><label for="tocguide-auto-style"><?php esc_html_e( 'Style', 'tocguide' ); ?></label></th>
+						<td>
+							<select name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_style]" id="tocguide-auto-style">
+								<?php
+								$tocguide_styles = array(
+									'default'   => __( 'Default', 'tocguide' ),
+									'minimal'   => __( 'Minimal', 'tocguide' ),
+									'boxed'     => __( 'Boxed', 'tocguide' ),
+									'underline' => __( 'Underline', 'tocguide' ),
+									'card'      => __( 'Card', 'tocguide' ),
+								);
+								foreach ( $tocguide_styles as $tocguide_slug => $tocguide_label ) :
+									?>
+									<option value="<?php echo esc_attr( $tocguide_slug ); ?>" <?php selected( $settings['auto_style'], $tocguide_slug ); ?>><?php echo esc_html( $tocguide_label ); ?></option>
+								<?php endforeach; ?>
+							</select>
+							<p class="description"><?php esc_html_e( 'Default keeps the bordered box. Minimal drops the border and shadow. Boxed adds an inner frame. Underline is a top rule. Card is a floating panel with a shadow.', 'tocguide' ); ?></p>
+						</td>
+					</tr>
 					<tr>
 						<th scope="row"><?php esc_html_e( 'Exclude theme styles', 'tocguide' ); ?></th>
 						<td>
