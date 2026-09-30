@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.8
+Stable tag: 1.6.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,7 @@ TOCguide adds a Table of Contents block to the WordPress block editor. It is an 
 * Collapsible outline and optional sticky positioning
 * Close button hides the outline for the visit; Show outline brings it back
 * On wide screens, Settings → TOCguide → Auto-insert → Position → Fixed left docks the outline to the left edge. The article starts beside it.
-* Optional Focus control dims every section except the one in view
+* Optional Focus control clears the page so only the post copy remains, on a plain sheet
 * Scroll-spy highlights the section currently in view
 * Hide bullets, two-column layout, compact spacing, max height with scroll
 * Auto-generate the block sitewide (top of content or after first heading)
@@ -216,6 +216,9 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 
 == Changelog ==
 
+= 1.6.9 =
+* Focus clears the page so only the post copy remains, on a plain sheet. Focus again brings the rest of the page back.
+
 = 1.6.8 =
 * The left-edge outline stays open, so the heading links stay on screen. Collapsing hides the list and the tools together.
 * Desktop, tablet, and mobile share one size for type, markers, and header buttons. Small screens use less padding unless Design sets a padding.
@@ -238,7 +241,7 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 
 = 1.6.4 =
 * A close button hides the outline. Show outline brings it back for that visit.
-* Focused reading is optional. The Focus control dims the rest of the page and keeps the section in view clear.
+* Focused reading is optional. Focus clears the page so only the post copy remains, on a plain sheet.
 
 = 1.6.3 =
 * The outline has default space above and below it. A margin set on the block still replaces that default.

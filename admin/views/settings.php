@@ -416,7 +416,7 @@ $tocguide_support_url = 'https://github.com/matthummel-pa/tocguide/issues';
 								</label><br>
 								<label>
 									<input type="checkbox" name="<?php echo esc_attr( $tocguide_opt ); ?>[auto_focus_mode]" value="1" <?php checked( $settings['auto_focus_mode'], 1 ); ?>>
-									<?php esc_html_e( 'Focused reading (a Focus control dims every section except the one in view)', 'tocguide' ); ?>
+									<?php esc_html_e( 'Focused reading. Focus clears the page so only the post copy remains, on a plain sheet.', 'tocguide' ); ?>
 								</label>
 							</fieldset>
 						</td>

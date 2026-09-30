@@ -3,6 +3,11 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.9] - 2026-09-30
+
+### Changed
+- Focus clears the header, sidebar, footer, and outline chrome. The post copy stays, set on a plain sheet. Focus again brings the page back.
+
 ## [1.6.8] - 2026-09-30
 
 ### Fixed

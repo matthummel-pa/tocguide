@@ -668,7 +668,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { focusMode: value } )
 						}
 						help={ __(
-							'Adds a Focus control. Turning it on dims the rest of the page and keeps the section in view clear.',
+							'Adds a Focus control. Turning it on clears the page so only the post copy remains, on a plain sheet.',
 							'tocguide'
 						) }
 					/>

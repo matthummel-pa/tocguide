@@ -103,7 +103,11 @@ const clearDock = () => {
 };
 
 const measureDock = () => {
-	if ( ! dockNav || ! dockNav.classList.contains( 'is-docked' ) ) {
+	if (
+		! dockNav ||
+		! dockNav.classList.contains( 'is-docked' ) ||
+		document.documentElement.classList.contains( 'tocguide-is-focusing' )
+	) {
 		return;
 	}
 	const width = dockNav.getBoundingClientRect().width;
@@ -195,7 +199,7 @@ const initClose = ( nav ) => {
 	restore.addEventListener( 'click', show );
 };
 
-// ── Focused reading (dim every section except the one in view) ───────────────
+// ── Focused reading (post copy only, on a plain sheet) ───────────────────────
 
 let focusNav = null;
 let focusFrame = 0;
@@ -231,45 +235,41 @@ const contentRootOf = ( headings ) => {
 	return headings[ 0 ] ? headings[ 0 ].parentElement : null;
 };
 
-const topChild = ( root, el ) => {
-	let node = el;
-	while ( node && node.parentElement !== root ) {
-		node = node.parentElement;
-	}
-	return node;
-};
-
-const exactToc = ( node ) =>
-	!! node &&
-	( node.classList.contains( 'wp-block-tocguide-table-of-contents' ) ||
-		( node.tagName === 'NAV' && node.classList.contains( 'tocguide' ) ) );
-
-const containsToc = ( node ) =>
-	exactToc( node ) ||
-	!! node.querySelector?.(
-		'nav.tocguide, .wp-block-tocguide-table-of-contents'
-	);
-
 const clearFocusMarks = () => {
 	document
-		.querySelectorAll( '.tocguide-focus-dim, .tocguide-focus-section' )
+		.querySelectorAll( '.tocguide-focus-hide, .tocguide-focus-paper' )
 		.forEach( ( el ) => {
 			el.classList.remove(
-				'tocguide-focus-dim',
-				'tocguide-focus-section'
+				'tocguide-focus-hide',
+				'tocguide-focus-paper'
 			);
 		} );
 };
 
-const pickHeading = ( nav, headings ) => {
-	const line = offsetOf( nav ) + 8;
-	let current = headings[ 0 ];
-	headings.forEach( ( heading ) => {
-		if ( heading.getBoundingClientRect().top - line <= 0 ) {
-			current = heading;
+const isFocusSkippable = ( node ) => {
+	if ( ! node || node.nodeType !== 1 ) {
+		return true;
+	}
+	const tag = node.tagName;
+	return (
+		tag === 'SCRIPT' ||
+		tag === 'STYLE' ||
+		tag === 'LINK' ||
+		tag === 'NOSCRIPT'
+	);
+};
+
+const paperRoot = ( nav ) => {
+	const headings = trackedHeadings( nav );
+	if ( headings.length ) {
+		const root = contentRootOf( headings );
+		if ( root ) {
+			return root;
 		}
-	} );
-	return current;
+	}
+	return document.querySelector(
+		'.entry-content, .wp-block-post-content, .post-content, article, main'
+	);
 };
 
 const paintFocus = () => {
@@ -278,61 +278,23 @@ const paintFocus = () => {
 		! focusNav ||
 		! document.documentElement.classList.contains( 'tocguide-is-focusing' )
 	) {
-		return;
+		return null;
 	}
-	const headings = trackedHeadings( focusNav );
-	if ( ! headings.length ) {
-		return;
+	const paper = paperRoot( focusNav );
+	if ( ! paper ) {
+		return null;
 	}
-	const root = contentRootOf( headings );
-	const active = pickHeading( focusNav, headings );
-	if ( ! root || ! active ) {
-		return;
+	paper.classList.add( 'tocguide-focus-paper' );
+	let node = paper;
+	while ( node && node !== document.body && node.parentElement ) {
+		Array.from( node.parentElement.children ).forEach( ( sibling ) => {
+			if ( sibling !== node && ! isFocusSkippable( sibling ) ) {
+				sibling.classList.add( 'tocguide-focus-hide' );
+			}
+		} );
+		node = node.parentElement;
 	}
-	const start = topChild( root, active );
-	const next = headings[ headings.indexOf( active ) + 1 ];
-	const end = next ? topChild( root, next ) : null;
-	if ( ! start ) {
-		return;
-	}
-
-	const bright = new Set();
-	if ( ! end || start === end ) {
-		bright.add( start );
-	} else {
-		let node = start;
-		while ( node && node !== end ) {
-			bright.add( node );
-			node = node.nextElementSibling;
-		}
-	}
-
-	const dimNode = ( node ) => {
-		if ( ! node || node.nodeType !== 1 ) {
-			return;
-		}
-		if (
-			node.tagName === 'SCRIPT' ||
-			node.tagName === 'STYLE' ||
-			exactToc( node )
-		) {
-			return;
-		}
-		if ( bright.has( node ) ) {
-			node.classList.add( 'tocguide-focus-section' );
-			return;
-		}
-		const holdsBright = Array.from( bright ).some( ( el ) =>
-			node.contains( el )
-		);
-		if ( holdsBright || containsToc( node ) ) {
-			Array.from( node.children ).forEach( dimNode );
-			return;
-		}
-		node.classList.add( 'tocguide-focus-dim' );
-	};
-
-	Array.from( root.children ).forEach( dimNode );
+	return paper;
 };
 
 const scheduleFocusPaint = () => {
@@ -376,7 +338,13 @@ const initFocus = ( nav ) => {
 			remember( key, true );
 			announce( nav, 'Focused reading on.' );
 		}
-		paintFocus();
+		const paper = paintFocus();
+		if ( persist && paper && paper.scrollIntoView ) {
+			paper.scrollIntoView( {
+				block: 'start',
+				behavior: prefersReduced() ? 'auto' : 'smooth',
+			} );
+		}
 	};
 
 	const disable = ( persist ) => {
@@ -386,6 +354,7 @@ const initFocus = ( nav ) => {
 		if ( focusNav === nav ) {
 			focusNav = null;
 		}
+		window.requestAnimationFrame( () => measureDock() );
 		if ( persist ) {
 			remember( key, false );
 			announce( nav, 'Focused reading off.' );

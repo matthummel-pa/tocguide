@@ -1205,23 +1205,8 @@
 	background-image: none !important; /* stylelint-disable-line declaration-no-important */
 }
 
-html.tocguide-is-focusing .tocguide-focus-dim {
-	opacity: 0.38;
-	transition: opacity 0.2s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-	html.tocguide-is-focusing .tocguide-focus-dim {
-		transition: none;
-	}
-}
-
-@media print {
-
-	html.tocguide-is-focusing .tocguide-focus-dim {
-		opacity: 1;
-	}
+html.tocguide-is-focusing .tocguide-focus-hide {
+	display: none !important; /* stylelint-disable-line declaration-no-important */
 }
 
 // Desktop dock. The front end adds .is-docked at 1100px and up.
@@ -1473,5 +1458,137 @@ html.tocguide-is-focusing .tocguide-focus-dim {
 		--tocguide-dock-line: #ccc;
 		--tocguide-dock-field-line: #ccc;
 		--tocguide-dock-marker-bg: transparent;
+	}
+}
+
+// Focus keeps the post copy and clears the rest of the page.
+html.tocguide-is-focusing,
+html.tocguide-is-focusing body {
+	margin-top: 0 !important; /* stylelint-disable-line declaration-no-important */
+	background: #e7e2d8 !important; /* stylelint-disable-line declaration-no-important */
+}
+
+html.tocguide-is-focusing body {
+	padding-inline-start: 0 !important; /* stylelint-disable-line declaration-no-important */
+}
+
+html.tocguide-is-focusing .tocguide-focus-paper {
+	box-sizing: border-box;
+	width: min(42rem, calc(100% - 1.5rem));
+	margin: 1.25rem auto 5.5rem;
+	padding: 1.75rem 1.25rem 2.25rem;
+	background: #fff !important; /* stylelint-disable-line declaration-no-important */
+	color: #1c1917 !important; /* stylelint-disable-line declaration-no-important */
+	border-radius: 2px;
+	box-shadow:
+		0 1px 2px rgba(0, 0, 0, 0.04),
+		0 16px 40px rgba(40, 32, 20, 0.12);
+	font-family: "Segoe UI", system-ui, sans-serif;
+	font-size: 1.0625rem;
+	line-height: 1.7;
+}
+
+@media (min-width: 782px) {
+
+	html.tocguide-is-focusing .tocguide-focus-paper {
+		margin-top: 2.5rem;
+		padding: 3rem 2.75rem 3.25rem;
+	}
+}
+
+html.tocguide-is-focusing .tocguide-focus-paper *:not(img):not(svg):not(video):not(button) {
+	background: transparent !important; /* stylelint-disable-line declaration-no-important */
+	box-shadow: none !important; /* stylelint-disable-line declaration-no-important */
+	text-shadow: none;
+	font-family: inherit;
+	color: inherit;
+}
+
+html.tocguide-is-focusing .tocguide-focus-paper :where(h1, h2, h3, h4, h5, h6) {
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.25;
+}
+
+html.tocguide-is-focusing .tocguide-focus-paper a {
+	color: #1c1917;
+	background: none;
+	text-decoration: underline;
+}
+
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents,
+html.tocguide-is-focusing .tocguide {
+	position: fixed !important; /* stylelint-disable-line declaration-no-important */
+	z-index: 100001 !important; /* stylelint-disable-line declaration-no-important */
+	inset-block: auto 1rem !important; /* stylelint-disable-line declaration-no-important */
+	inset-inline: auto 1rem !important; /* stylelint-disable-line declaration-no-important */
+	top: auto !important; /* stylelint-disable-line declaration-no-important */
+	transform: none !important; /* stylelint-disable-line declaration-no-important */
+	width: auto !important; /* stylelint-disable-line declaration-no-important */
+	max-height: none !important; /* stylelint-disable-line declaration-no-important */
+	margin: 0 !important; /* stylelint-disable-line declaration-no-important */
+	padding: 0 !important; /* stylelint-disable-line declaration-no-important */
+	overflow: visible !important; /* stylelint-disable-line declaration-no-important */
+	border: 0 !important; /* stylelint-disable-line declaration-no-important */
+	background: transparent !important; /* stylelint-disable-line declaration-no-important */
+	box-shadow: none !important; /* stylelint-disable-line declaration-no-important */
+	visibility: hidden;
+}
+
+html.tocguide-is-focusing .tocguide > :not(.tocguide__header),
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents > :not(.tocguide__header),
+html.tocguide-is-focusing .tocguide .tocguide__title,
+html.tocguide-is-focusing .tocguide .tocguide__toggle,
+html.tocguide-is-focusing .tocguide .tocguide__close,
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__title,
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__toggle,
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__close {
+	display: none !important; /* stylelint-disable-line declaration-no-important */
+}
+
+html.tocguide-is-focusing .tocguide .tocguide__header,
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__header {
+	margin: 0 !important; /* stylelint-disable-line declaration-no-important */
+}
+
+html.tocguide-is-focusing .tocguide-focus-paper .tocguide__focus,
+html.tocguide-is-focusing .tocguide .tocguide__focus,
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__focus,
+html.tocguide-is-focusing .tocguide__focus[aria-pressed="true"] {
+	position: fixed !important; /* stylelint-disable-line declaration-no-important */
+	z-index: 100002 !important; /* stylelint-disable-line declaration-no-important */
+	inset-block: auto 1rem !important; /* stylelint-disable-line declaration-no-important */
+	inset-inline: auto 1rem !important; /* stylelint-disable-line declaration-no-important */
+	background: #1c1917 !important; /* stylelint-disable-line declaration-no-important */
+	border-color: #1c1917 !important; /* stylelint-disable-line declaration-no-important */
+	color: #fff !important; /* stylelint-disable-line declaration-no-important */
+	opacity: 1;
+	visibility: visible;
+	transition: none;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+html.tocguide-is-focusing .tocguide-focus-paper .tocguide__focus span,
+html.tocguide-is-focusing .tocguide .tocguide__focus span {
+	color: #fff !important; /* stylelint-disable-line declaration-no-important */
+	background: transparent !important; /* stylelint-disable-line declaration-no-important */
+}
+
+@media print {
+
+	html.tocguide-is-focusing,
+	html.tocguide-is-focusing body {
+		background: none !important; /* stylelint-disable-line declaration-no-important */
+	}
+
+	html.tocguide-is-focusing .tocguide-focus-hide {
+		display: revert !important; /* stylelint-disable-line declaration-no-important */
+	}
+
+	html.tocguide-is-focusing .tocguide-focus-paper {
+		width: auto;
+		margin: 0;
+		padding: 0;
+		box-shadow: none;
 	}
 }
