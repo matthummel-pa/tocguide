@@ -3,6 +3,12 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.14] - 2026-10-01
+
+### Fixed
+- Resume stays hidden until this visit has a saved place in the post.
+- The left outline keeps its column on themes that center the content. Closing it leaves a readable Show outline control.
+
 ## [1.6.13] - 2026-09-30
 
 ### Changed

@@ -5,7 +5,7 @@ Tags: table of contents, toc, reading guide, block, study tools
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.13
+Stable tag: 1.6.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -214,6 +214,10 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 4. Docs & Support tab in wp-admin (links to the documentation site).
 
 == Changelog ==
+
+= 1.6.14 =
+* Resume stays hidden until this visit has a saved place in the post.
+* The left outline keeps its column on themes that center the content. Closing it leaves a readable Show outline control.
 
 = 1.6.13 =
 * Show page in focused reading is a floating control with an expand icon, a short restore hint, and an Esc keycap so it is obvious how to leave Focus.

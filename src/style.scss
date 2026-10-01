@@ -860,6 +860,11 @@
 	outline-offset: 2px;
 }
 
+.wp-block-tocguide-table-of-contents .tocguide__resume-btn[hidden],
+.tocguide .tocguide__resume-btn[hidden] {
+	display: none;
+}
+
 // ── Reading progress bar ─────────────────────────────────────────────────────
 
 .wp-block-tocguide-table-of-contents .tocguide__reading-wrap,
@@ -1224,12 +1229,18 @@ html.tocguide-is-focusing .tocguide-focus-hide {
 	}
 
 	.tocguide-dock-host:has(> .is-docked.is-dismissed) {
-		grid-template-columns: auto minmax(0, 1fr);
+
+		/* max-content alone collapses against the theme, so keep a floor. */
+		grid-template-columns: minmax(10rem, max-content) minmax(0, 1fr);
 	}
 
 	.tocguide-dock-host > :not(.is-docked) {
 		grid-column: 2;
 		min-width: 0;
+		max-width: none;
+
+		/* Theme constrained layouts set auto inline margins with !important. */
+		margin-inline: 0 !important; /* stylelint-disable-line declaration-no-important */
 	}
 
 	.wp-block-tocguide-table-of-contents.is-docked,
@@ -1242,11 +1253,16 @@ html.tocguide-is-focusing .tocguide-focus-hide {
 		inset-inline-start: auto;
 		top: 1.25rem;
 		transform: none;
-		width: auto;
-		max-width: none;
+		justify-self: stretch;
 		max-height: none;
 		box-sizing: border-box;
 		margin: 0;
+
+		/* width:auto collapses to the padding when a theme sets auto margins. */
+		width: 100%;
+		min-width: 0;
+		max-width: none !important; /* stylelint-disable-line declaration-no-important */
+		margin-inline: 0 !important; /* stylelint-disable-line declaration-no-important */
 		padding: var(--tocguide-padding, 0.85rem 0.75rem 0.9rem 0.65rem);
 		overflow: visible;
 		border: 3px solid var(--tocguide-dock-line, #2f8f5e) !important; /* stylelint-disable-line declaration-no-important */
@@ -1303,6 +1319,10 @@ html.tocguide-is-focusing .tocguide-focus-hide {
 			margin-inline-start: 0;
 			padding: 0 0.7rem;
 			font-size: 0.75rem;
+		}
+
+		.tocguide__resume-btn[hidden] {
+			display: none;
 		}
 
 		.tocguide__link,
@@ -1442,7 +1462,8 @@ html.tocguide-is-focusing .tocguide-focus-hide {
 		}
 
 		&.is-dismissed {
-			width: auto;
+			width: max-content;
+			min-width: 10rem;
 			max-height: none;
 			padding: 0.65rem 0.75rem 0.65rem 0.6rem;
 			overflow: visible;
@@ -1583,9 +1604,11 @@ html.tocguide-is-focusing .wp-block-tocguide-table-of-contents > :not(.tocguide_
 html.tocguide-is-focusing .tocguide .tocguide__title,
 html.tocguide-is-focusing .tocguide .tocguide__toggle,
 html.tocguide-is-focusing .tocguide .tocguide__close,
+html.tocguide-is-focusing .tocguide .tocguide__resume-btn,
 html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__title,
 html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__toggle,
-html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__close {
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__close,
+html.tocguide-is-focusing .wp-block-tocguide-table-of-contents .tocguide__resume-btn {
 	display: none !important; /* stylelint-disable-line declaration-no-important */
 }
 
