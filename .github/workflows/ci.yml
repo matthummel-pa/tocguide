@@ -26,6 +26,8 @@ jobs:
       - run: npm run lint:js
       - run: npm run lint:css
       - run: npm run build
+      - name: WordPress.org SVN tree
+        run: node scripts/package-wporg-svn.js --skip-build --skip-assets
 
   php:
     name: PHP

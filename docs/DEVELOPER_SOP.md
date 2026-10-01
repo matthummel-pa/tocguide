@@ -102,7 +102,7 @@ Bump **all** of: `tocguide.php` (`Version` + `TOCGUIDE_VERSION`), `package.json`
 1. Dated `CHANGELOG.md` + `readme.txt` changelog.
 2. `npm run build` && `npm run plugin-zip`
 3. Push a tag `vX.Y.Z`. GitHub Actions attaches `tocguide.zip` to the release.
-4. WordPress.org: SVN tag matching `Stable tag`.
+4. WordPress.org: `npm run package:svn`, then commit trunk, `assets/`, and `tags/<Stable tag>` (see `docs/marketplace/wordpress-org.md`). Do not upload a zip into SVN.
 5. CodeCanyon: upload the same ZIP + HTML docs.
 
 ---
