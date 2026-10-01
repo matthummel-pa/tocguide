@@ -24,7 +24,7 @@
 
 <p align="center">
   <a href="https://github.com/matthummel-pa/tocguide/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/matthummel-pa/tocguide/actions/workflows/ci.yml/badge.svg"></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.6.14-275c3e">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.6.15-275c3e">
   <img alt="WordPress" src="https://img.shields.io/badge/WordPress-6.4%2B-3858e9">
   <img alt="PHP" src="https://img.shields.io/badge/PHP-7.4%2B-777bb3">
   <img alt="License" src="https://img.shields.io/badge/license-GPLv2%20or%20later-1b1f24">
@@ -199,7 +199,7 @@ TOCguide is built to add **zero measurable overhead** on pages that don't use it
 
 ## Install
 
-Current version: **1.6.14**.
+Current version: **1.6.15**.
 
 1. Download `tocguide.zip` from [Releases](https://github.com/matthummel-pa/tocguide/releases).
 2. In WordPress: **Plugins → Add New → Upload Plugin**.

@@ -3,6 +3,11 @@
 All notable changes to TOCguide are documented here.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.6.15] - 2026-10-01
+
+### Fixed
+- Fixed left no longer pulls an outline out of its post on blog and archive pages. The left column still applies when reading a single post or page on a wide screen.
+
 ## [1.6.14] - 2026-10-01
 
 ### Fixed

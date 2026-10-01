@@ -83,8 +83,9 @@ const remembered = ( key ) => {
 	}
 };
 
-// Desktop only: keep the outline in a left column of <main>.
-// The page canvas (header, footer, body padding) stays put.
+// Desktop only, on a single post or page: keep the outline in a left
+// column of <main>. The page canvas (header, footer, body padding) stays put.
+// Archives print the same block inside each post, so they are left alone.
 let dockNav = null;
 let dockQuery = null;
 let dockHost = null;
@@ -132,8 +133,23 @@ const dockMedia = () => {
 	return dockQuery;
 };
 
+// `single`, `page`, and `attachment` are the body classes WordPress has
+// used for is_singular() for years. `wp-singular` is the newer alias.
+const isSingularView = () => {
+	const classes = document.body.classList;
+	return (
+		classes.contains( 'wp-singular' ) ||
+		classes.contains( 'single' ) ||
+		classes.contains( 'page' ) ||
+		classes.contains( 'attachment' )
+	);
+};
+
 const canDock = () => {
 	if ( ! document.body || document.body.classList.contains( 'wp-admin' ) ) {
+		return false;
+	}
+	if ( ! isSingularView() ) {
 		return false;
 	}
 	if ( document.querySelector( '.editor-styles-wrapper' ) ) {
