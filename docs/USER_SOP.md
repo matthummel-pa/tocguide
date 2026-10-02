@@ -47,6 +47,9 @@ With the block selected, use the sidebar:
 | **Max height** | Scroll the list when it is taller than this (0 = unlimited). |
 | **Style** | Block Styles panel: Default, Minimal, Boxed, Underline, Card. |
 | **Sticky / collapsible / highlight** | Reading behavior. Smooth scroll can inherit the site setting or override it. |
+| **Fixed left** | On a single post or page, wide screens (1100px and up) keep the outline in an 18rem column of the main content. The header and the rest of the page stay put. Archives, the blog index, and smaller screens leave the outline with the content. |
+| **Close button** | On by default. Hides the outline for that visit. **Show outline** brings it back. |
+| **Focused reading** | Off by default. Adds Focus. Turning it on sets the post copy on a paper card (`"Segoe UI", system-ui, sans-serif`) and hides the surrounding page. **Show page**, **Bring the rest back**, or Escape restores the page. |
 | **Minimum headings / scroll offset** | `-1` inherits **Settings → TOCguide**. |
 
 Color, spacing, typography, and border are the normal block controls.
@@ -57,11 +60,12 @@ Color, spacing, typography, and border are the normal block controls.
 
 **Settings → TOCguide → Auto-generate the block**
 
-This prints the same **Table of Contents** Gutenberg block on the front end. It is not a shortcode.
+This prints the same **Table of Contents** Gutenberg block on the front end from the auto-insert settings.
 
 - Off (default) — add the block yourself, or use `[tocguide]` in classic content
 - Top of content
 - After the first heading
+- Fixed left — on a wide single post or page, an 18rem column of the main content. On a small screen the outline stays with the content. Auto-insert itself runs on singular views.
 
 Choose post types (Posts, Pages, …). Set title, heading levels, style, columns, collapse, and the rest of the layout on that same screen.
 
@@ -74,19 +78,32 @@ If a post already has the block or `[tocguide]`, auto-generate is skipped so you
 ```
 [tocguide]
 [tocguide title="On this page" ordered="1" numbering="nested" style="boxed" collapsible="1"]
+[tocguide fixed="1" focus="1" bookmark="1" export="1"]
 ```
 
-Attributes: `title`, `showtitle`, `titletag`, `h1`–`h6`, `ordered`, `numbering`, `markers`, `collapsible`, `collapsed`, `sticky`, `compact`, `columns`, `underline`, `highlight`, `maxheight`, `min`, `smooth`, `style`.
+On/off attributes accept `1`, `true`, `yes`, or `on`.
+
+Layout and behavior: `title`, `showtitle`, `titletag`, `h1`–`h6`, `ordered`, `numbering`, `markers`, `collapsible`, `collapsed`, `close` (default on), `focus` (default off), `sticky`, `fixed` (default off; `fixed="1"` docks on a wide single post or page), `compact`, `columns`, `underline`, `highlight`, `maxheight`, `min` (`-1` uses the site minimum), `smooth` (`inherit`, `on`, or `off`), `style`, `theme` (`inherit`, `exclude`, or `include`).
+
+Reading Guide: `preview`, `guide`, `previews`, `density`, `readtime`, `progress`, `reactions`, `citations`, `citation` (`apa`, `mla`, `chicago`, `harvard`, or `plain`).
+
+Study tools: `export="1"` (Copy, .md, .doc, Print), `rprogress="1"`, `bookmark="1"` (resume; the button stays hidden until `tocguide-bm-{postId}` holds a heading in this post), `rnotes="1"`.
 
 ---
 
-## 6. Skip a heading
+## 6. Design settings
+
+**Settings → TOCguide → Design** sets the style, colours, type size, and spacing. The preview updates as you edit. A whole number such as `15` is saved as `15px`. A small decimal such as `0.95` is saved as `0.95rem`. Font choices are sans-serif or monospace already on the device. Save publishes that look on every outline.
+
+---
+
+## 7. Skip a heading
 
 On the Heading block: **Advanced → Additional CSS class(es)** → `no-toc` (or `tocguide-skip`).
 
 ---
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 **Empty TOC**
 - Use real Heading blocks, not bold paragraphs.
@@ -102,10 +119,14 @@ On the Heading block: **Advanced → Additional CSS class(es)** → `no-toc` (or
 
 **Styles clash with the theme**
 - Try another preset, or CSS on `.tocguide`, `.tocguide__link`, `.tocguide__link.is-active`.
+- **Settings → TOCguide → Design** can exclude theme list styles. The preview updates as you edit.
+
+**Fixed left stays in the post**
+- The left column applies on a single post or page at 1100px and wider. Archives, the blog index, and smaller screens keep the outline with the content.
 
 ---
 
-## 8. FAQ
+## 9. FAQ
 
 **Classic Editor?** Use `[tocguide]`.
 
@@ -117,6 +138,6 @@ On the Heading block: **Advanced → Additional CSS class(es)** → `no-toc` (or
 
 ---
 
-## 9. Getting help
+## 10. Getting help
 
 [GitHub Issues](https://github.com/matthummel-pa/tocguide/issues) — include WordPress version, theme, and a screenshot. Policy: [SUPPORT.md](../SUPPORT.md).

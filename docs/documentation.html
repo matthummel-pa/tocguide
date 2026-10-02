@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TOCguide documentation — Table of Contents block for WordPress</title>
-<meta name="description" content="Full documentation for TOCguide v1.5.0: install, block sidebar, Reading Guide, study assistant, auto-insert, shortcode, settings, compatibility, and developer filters.">
+<meta name="description" content="Full documentation for TOCguide v1.6.15: install, block sidebar, Fixed left, Focus, Design settings, Reading Guide, shortcode, and developer filters.">
 <link rel="canonical" href="https://matthummel-pa.github.io/tocguide/documentation.html">
 <meta property="og:title" content="TOCguide documentation">
 <meta property="og:description" content="Install, block sidebar, Reading Guide, hover previews, citations, auto-insert, shortcode, settings, compatibility, and developer notes.">
@@ -102,6 +102,7 @@
     <a href="#block-sidebar">Block sidebar</a>
     <a href="#styles">Style presets</a>
     <a href="#skip">Skip a heading</a>
+    <a href="#reading-layout">Fixed left &amp; Focus</a>
 
     <div class="section-label">Reading Guide</div>
     <a href="#reading-guide">Overview</a>
@@ -114,6 +115,7 @@
 
     <div class="section-label">Site-wide</div>
     <a href="#settings">Settings page</a>
+    <a href="#design">Design</a>
     <a href="#auto-insert">Auto-insert</a>
     <a href="#shortcode">Shortcode</a>
 
@@ -134,7 +136,7 @@
 <!-- ── Main content ── -->
 <div class="content">
   <p class="breadcrumb"><a href="index.html">← TOCguide home</a> · <a href="support.html">Support</a></p>
-  <p class="kicker">Plugin documentation · v1.5.0</p>
+  <p class="kicker">Plugin documentation · v1.6.15</p>
   <h1>TOCguide</h1>
   <p class="intro">A server-rendered Table of Contents for the WordPress block editor, with a built-in Reading Guide. Independent plugin — slug, text domain, and GitHub repo are all <code>tocguide</code>.</p>
 
@@ -173,6 +175,9 @@ npm run build</code></pre>
       <tr><td>Underline links</td><td>Always underline TOC links (vs. underline-on-hover).</td></tr>
       <tr><td>Max height</td><td>Adds a scrollable container when the list exceeds N pixels.</td></tr>
       <tr><td>Sticky</td><td>Keeps the block fixed during scroll using <code>position: sticky</code>.</td></tr>
+      <tr><td>Fixed left</td><td>On a single post or page, wide screens (1100px and up) keep the outline in an 18rem column of the main content. The header and the rest of the page stay put. Archives, the blog index, and smaller screens leave the outline with the content.</td></tr>
+      <tr><td>Close button</td><td>On by default. Hides the outline for that visit. <strong>Show outline</strong> brings it back.</td></tr>
+      <tr><td>Focused reading</td><td>Adds a Focus control. Turning it on sets <code>tocguide-is-focusing</code> on <code>&lt;html&gt;</code>, hides the surrounding page, and sets the post copy on a paper card (<code>"Segoe UI", system-ui, sans-serif</code>). <code>#tocguide-focus-exit</code> shows <strong>Show page</strong>, <strong>Bring the rest back</strong>, and Esc. Escape or that button restores the page.</td></tr>
       <tr><td>Collapsible / start collapsed</td><td>Adds a toggle button. Start collapsed defaults the block closed.</td></tr>
       <tr><td>Highlight active heading</td><td>Scroll-spy marks the section currently in view with <code>aria-current</code>.</td></tr>
       <tr><td>Smooth scroll</td><td>Per-block override: Inherit site default · On · Off.</td></tr>
@@ -200,8 +205,27 @@ npm run build</code></pre>
   <h2 id="skip">5. Skip a heading</h2>
   <p>Add CSS class <code>no-toc</code> or <code>tocguide-skip</code> to a Heading block under <em>Advanced → Additional CSS class(es)</em>. That heading is excluded from both the TOC list and the anchor injection.</p>
 
+  <!-- Fixed left, close, Focus -->
+  <h2 id="reading-layout">6. Fixed left, close, and Focus</h2>
+  <p class="intro">These controls live in the block sidebar under <strong>Behavior</strong>, and on the shortcode. The published outline inherits the theme. Focus paper uses <code>"Segoe UI", system-ui, sans-serif</code>.</p>
+
+  <h3>Fixed left</h3>
+  <p>On a single post, page, or attachment, screens at least 1100px wide move an outline marked Fixed left into an 18rem column inside <code>main</code> (or <code>article</code> when the theme has no <code>main</code>). Those views carry <code>wp-singular</code>, <code>single</code>, <code>page</code>, or <code>attachment</code> on the body. The header and the rest of the page stay put.</p>
+  <p>Archives, the blog index, and viewports under 1100px leave the outline with the content. The block sidebar help and <strong>Settings → TOCguide → Auto-insert</strong> say the same thing: Fixed left applies when reading a single post or page.</p>
+  <p>Turn it on per block, choose <strong>Position → Fixed left</strong> for auto-insert, or pass <code>fixed="1"</code> on the shortcode.</p>
+
+  <h3>Close</h3>
+  <p>The close button is on by default. It hides the outline for that visit. <strong>Show outline</strong> brings it back. <code>close="0"</code> removes the button.</p>
+
+  <h3>Focused reading</h3>
+  <p>Off by default. Enable <strong>Focused reading</strong> or <code>focus="1"</code>. Focus adds <code>tocguide-is-focusing</code> to <code>&lt;html&gt;</code>, hides siblings around the post, and styles the post copy as a paper card.</p>
+  <p>A floating control, <code>#tocguide-focus-exit</code>, stays on screen. It reads <strong>Show page</strong>, with <strong>Bring the rest back</strong> and an Esc keycap. Escape and the button restore the page. The choice is remembered for that visit.</p>
+
+  <h3>Resume bookmark</h3>
+  <p>When the resume bookmark is on, an IntersectionObserver stores the last heading in <code>localStorage</code> as <code>tocguide-bm-{postId}</code>. The Resume button stays hidden until that key holds a heading that exists in the current post’s outline. Enable it in the block sidebar or with <code>bookmark="1"</code>.</p>
+
   <!-- Reading Guide -->
-  <h2 id="reading-guide">6. Reading Guide <span class="badge-new">1.1+</span></h2>
+  <h2 id="reading-guide">7. Reading Guide <span class="badge-new">1.1+</span></h2>
   <p class="intro">Reading Guide mode transforms the TOC from a navigation list into an intelligent reading companion. Enable it in the block sidebar under <strong>Reading Guide</strong>.</p>
   <div class="callout"><p><strong>All features are opt-in.</strong> Disabling everything gives you a standard, fast, server-rendered TOC identical to v1.0. Enable features individually as needed.</p></div>
 
@@ -239,7 +263,7 @@ npm run build</code></pre>
     <tbody>
       <tr><td><strong>Reader note pads</strong></td><td>A 📝 button per section opens a private pad stored in <code>localStorage</code>. Toggle: <strong>Reader note pads</strong> or shortcode <code>rnotes="1"</code>.</td></tr>
       <tr><td><strong>Reading progress bar</strong></td><td>A thin 0–100% bar tracks headings scrolled past via IntersectionObserver. Toggle or <code>rprogress="1"</code>.</td></tr>
-      <tr><td><strong>Resume bookmark</strong></td><td>Remembers the last-read heading and shows a ↩ Resume button on return visits. Toggle or <code>bookmark="1"</code>.</td></tr>
+      <tr><td><strong>Resume bookmark</strong></td><td>Stores the last heading in <code>localStorage</code> as <code>tocguide-bm-{postId}</code>. The ↩ Resume button stays hidden until that heading is in the current outline. Toggle or <code>bookmark="1"</code>.</td></tr>
       <tr><td><strong>Total read-time badge</strong></td><td>When Reading Guide + read-time are on, the TOC header shows the aggregated read time for the post.</td></tr>
     </tbody>
   </table>
@@ -261,7 +285,7 @@ npm run build</code></pre>
   </ul>
 
   <!-- Settings -->
-  <h2 id="settings">7. Settings → TOCguide</h2>
+  <h2 id="settings">8. Settings → TOCguide</h2>
   <p>Find these under <strong>WordPress admin → Settings → TOCguide</strong>.</p>
 
   <h3>Reading experience</h3>
@@ -275,11 +299,14 @@ npm run build</code></pre>
     </tbody>
   </table>
 
+  <h3 id="design">Design</h3>
+  <p><strong>Settings → TOCguide → Design</strong> sets the style (Default, Minimal, Boxed, Underline, Card), colours, type size, and spacing. The preview updates as you edit. A whole number such as 15 is saved as 15px. A small decimal such as 0.95 is saved as 0.95rem. Font choices are sans-serif or monospace already on the device. Saving publishes that look on every outline. A block placed by hand keeps the style chosen in the editor.</p>
+
   <h3 id="auto-insert">Auto-generate the block</h3>
   <table>
     <thead><tr><th>Setting</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr><td>Position: Off / Top of content / After first heading</td><td>Posts already containing the block or <code>[tocguide]</code> shortcode are skipped.</td></tr>
+      <tr><td>Position: Off / Top of content / After first heading / Fixed left</td><td>Prints on a single post or page of the chosen types. Posts already containing the block or <code>[tocguide]</code> shortcode are skipped. Fixed left docks on a wide singular view and stays with the content on small screens.</td></tr>
       <tr><td>Post types</td><td>Checkboxes for all registered public post types.</td></tr>
       <tr><td>Title text and show/hide</td><td>Default title for the auto-generated block.</td></tr>
       <tr><td>Title element</td><td>P, H2, H3, or H4.</td></tr>
@@ -287,7 +314,7 @@ npm run build</code></pre>
       <tr><td>List type and numbering</td><td>Bullets, sequential, or nested.</td></tr>
       <tr><td>Style preset</td><td>Default, Minimal, Boxed, Underline, Card.</td></tr>
       <tr><td>Layout options</td><td>Compact, two columns, underline links, max height.</td></tr>
-      <tr><td>Behavior</td><td>Sticky, collapsible, start collapsed.</td></tr>
+      <tr><td>Behavior</td><td>Sticky, collapsible, start collapsed, close button (on by default), Focused reading (off by default).</td></tr>
     </tbody>
   </table>
 
@@ -301,10 +328,11 @@ npm run build</code></pre>
   </table>
 
   <!-- Shortcode -->
-  <h2 id="shortcode">8. Shortcode</h2>
+  <h2 id="shortcode">9. Shortcode</h2>
   <p>Use <code>[tocguide]</code> in Classic Editor content, text widgets, or theme templates via <code>do_shortcode('[tocguide]')</code>.</p>
-  <p>All block attributes are available as shortcode attributes (snake_case or camelCase):</p>
-  <pre><code>[tocguide title="Contents" ordered="1" numbering="nested" style="boxed" h4="1" min="3"]</code></pre>
+  <p>On/off attributes accept <code>1</code>, <code>true</code>, <code>yes</code>, or <code>on</code>. Names are the ones in this table.</p>
+  <pre><code>[tocguide title="Contents" ordered="1" numbering="nested" style="boxed" h4="1" min="3"]
+[tocguide fixed="1" focus="1" theme="exclude" export="1"]</code></pre>
   <table>
     <thead><tr><th>Attribute</th><th>Values</th><th>Default</th></tr></thead>
     <tbody>
@@ -317,13 +345,18 @@ npm run build</code></pre>
       <tr><td><code>markers</code></td><td>0 / 1 (1 = show)</td><td>1</td></tr>
       <tr><td><code>collapsible</code></td><td>0 / 1</td><td>0</td></tr>
       <tr><td><code>collapsed</code></td><td>0 / 1</td><td>0</td></tr>
+      <tr><td><code>close</code></td><td>0 / 1</td><td>1</td></tr>
+      <tr><td><code>focus</code></td><td>0 / 1</td><td>0</td></tr>
       <tr><td><code>sticky</code></td><td>0 / 1</td><td>0</td></tr>
+      <tr><td><code>fixed</code></td><td>0 / 1. <code>1</code> docks on a wide single post or page</td><td>0</td></tr>
+      <tr><td><code>theme</code></td><td><code>inherit</code>, <code>exclude</code>, <code>include</code></td><td>inherit</td></tr>
+      <tr><td><code>export</code></td><td>0 / 1. <code>1</code> adds Copy, .md, .doc, and Print</td><td>0</td></tr>
       <tr><td><code>compact</code></td><td>0 / 1</td><td>0</td></tr>
       <tr><td><code>columns</code></td><td>1 / 2</td><td>1</td></tr>
       <tr><td><code>underline</code></td><td>0 / 1</td><td>0</td></tr>
       <tr><td><code>highlight</code></td><td>0 / 1</td><td>site default</td></tr>
       <tr><td><code>maxheight</code></td><td>pixels (0 = unlimited)</td><td>0</td></tr>
-      <tr><td><code>min</code></td><td>integer</td><td>site default</td></tr>
+      <tr><td><code>min</code></td><td>integer. <code>-1</code> uses the site minimum</td><td>-1</td></tr>
       <tr><td><code>smooth</code></td><td>inherit / on / off</td><td>inherit</td></tr>
       <tr><td><code>style</code></td><td>default, minimal, boxed, underline, card</td><td>default</td></tr>
       <tr><td><code>rprogress</code></td><td>0 / 1</td><td>0</td></tr>
@@ -333,8 +366,8 @@ npm run build</code></pre>
   </table>
 
   <!-- Compatibility -->
-  <h2 id="compatibility">9. Compatibility</h2>
-  <p class="intro">Compatibility is a core design principle of TOCguide. The block inherits theme colors and fonts, never loads from third-party CDNs, and makes zero remote calls in any mode.</p>
+  <h2 id="compatibility">10. Compatibility</h2>
+  <p class="intro">Compatibility is a core design principle of TOCguide. The outline inherits theme colors and fonts. Focus paper uses <code>"Segoe UI", system-ui, sans-serif</code>. The plugin never loads from third-party CDNs, and makes zero remote calls in any mode.</p>
 
   <h3 id="seo-plugins">SEO plugins</h3>
   <div class="compat-row">
@@ -391,7 +424,7 @@ npm run build</code></pre>
   </table>
 
   <!-- Developer -->
-  <h2 id="dev-build">10. Developer: build</h2>
+  <h2 id="dev-build">11. Developer: build</h2>
   <pre><code>git clone https://github.com/matthummel-pa/tocguide.git
 cd tocguide
 npm install
@@ -399,7 +432,7 @@ npm run build   # production build → build/
 npm run start   # development watch mode</code></pre>
   <p>Requires Node.js 20+ (see <code>.nvmrc</code>) and npm 9+. The build uses <code>@wordpress/scripts</code>. Unminified source is in <code>src/</code>; compiled assets land in <code>build/</code> (gitignored, built on release via GitHub Actions). PHP: <code>composer install && composer phpcs</code>.</p>
 
-  <h2 id="dev-filters">11. Developer: PHP filters</h2>
+  <h2 id="dev-filters">12. Developer: PHP filters</h2>
   <p>Hook into TOCguide's rendering to customize headings, skip post types, or alter the output:</p>
   <table>
     <thead><tr><th>Filter</th><th>Args</th><th>Purpose</th></tr></thead>
@@ -417,7 +450,7 @@ add_filter( 'tocguide_headings', function( $headings, $post_id ) {
     });
 }, 10, 2 );</code></pre>
 
-  <h2 id="privacy">12. Privacy</h2>
+  <h2 id="privacy">13. Privacy</h2>
   <p>TOCguide does not collect personal data, set cookies, or call remote services. Plugin CSS and JS are local (no CDN). Emoji reactions use the browser's own <code>localStorage</code> — no data leaves the reader's device. Citation data is built from post meta that is already public. JSON-LD is printed only if you opt in. Independent plugin by Matt Hummel; slug <code>tocguide</code>. <a href="https://github.com/matthummel-pa/tocguide/blob/main/PRIVACY.md">Full privacy policy →</a></p>
 
   <footer>

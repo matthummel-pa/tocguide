@@ -18,6 +18,13 @@ You are selling a convenient package, documentation, and item support — not a 
 
 Server-rendered Table of Contents block for Gutenberg. Auto outline from headings, live preview, auto-insert, shortcode, accessible and SEO-friendly.
 
+## Reader features to mention on the item page
+
+- **Fixed left:** on a wide single post or page (1100px and up), an 18rem column inside the main content. Archives, the blog index, and small screens leave the outline with the content. The header stays put.
+- **Focus:** optional. **Show page**, **Bring the rest back**, or Escape restores the page. Focus paper uses Segoe UI / system UI sans.
+- **Design:** Settings → TOCguide → Design, with a preview that updates as you edit.
+- **Shortcode:** `close`, `focus`, `fixed`, `theme` (`inherit`, `exclude`, `include`), `export` (Copy, .md, .doc, Print). On/off values: `1`, `true`, `yes`, `on`.
+
 ## What to upload
 
 1. `npm run build && npm run plugin-zip` → installable `tocguide.zip`

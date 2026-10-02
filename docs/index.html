@@ -144,7 +144,7 @@
 
 <header class="hero">
   <div class="wrap">
-    <p class="kicker">WordPress plugin · slug <strong>tocguide</strong> · v1.5.0</p>
+    <p class="kicker">WordPress plugin · slug <strong>tocguide</strong> · v1.6.15</p>
     <h1>Lightweight TOC.<br><em>Zero setup.</em></h1>
     <p class="lede">Lightweight, server-rendered Table of Contents block for the WordPress block editor (Gutenberg). TOCguide auto-builds an accessible, SEO-friendly linked outline from your post headings — numbered or bulleted, no configuration required. Independent plugin. Not affiliated with any other product.</p>
     <p class="lede">Optional Reading Guide adds section previews, read-time, hover tooltips, emoji reactions, and one-click citations. All in the first HTML response. No accounts. No tracking. No external APIs.</p>
@@ -154,7 +154,7 @@
       <a class="btn ghost" href="support.html">Support</a>
     </div>
     <div class="chips">
-      <span class="chip green">v1.5.0</span>
+      <span class="chip green">v1.6.15</span>
       <span class="chip">WordPress 6.4 – 7.1</span>
       <span class="chip">PHP 7.4 – 8.3</span>
       <span class="chip">GPL-2.0-or-later</span>
@@ -177,9 +177,19 @@
 
   <section id="whats-new">
     <p class="chap">What's new</p>
-    <h2>v1.5.0 — one name, everywhere.</h2>
-    <p style="color:var(--muted);max-width:38rem">Display name TOCguide. Slug, text domain, block, shortcode, CSS, and GitHub repo are all <code>tocguide</code>. Independent plugin — not affiliated with any other product.</p>
+    <h2>v1.6.15 — a column for the outline, and a page you can clear.</h2>
+    <p style="color:var(--muted);max-width:38rem">On a wide single post or page, Fixed left keeps the outline in a left column of the main content. Focus clears the rest of the page onto a paper sheet. <strong>Show page</strong> or Escape brings it back. Display name, slug, and repo stay <code>tocguide</code>.</p>
     <div class="grid">
+      <article class="card">
+        <span class="icon">1.6</span>
+        <h3>Fixed left</h3>
+        <p>At 1100px and up, a single post or page docks the outline in an 18rem column inside the main content. The header stays put. Archives and small screens leave the outline with the content.</p>
+      </article>
+      <article class="card">
+        <span class="icon">Aa</span>
+        <h3>Focus</h3>
+        <p>Focused reading adds <code>tocguide-is-focusing</code> and a paper card in Segoe UI / system UI. The floating control reads <strong>Show page</strong> and <strong>Bring the rest back</strong>, with Esc.</p>
+      </article>
       <article class="card">
         <span class="icon">1.5</span>
         <h3>Identity</h3>
@@ -242,12 +252,22 @@
       <article class="card">
         <span class="icon">📌</span>
         <h3>Sticky &amp; collapsible</h3>
-        <p>Keep the TOC in view while scrolling. Let readers collapse it. Highlight the active section as they scroll.</p>
+        <p>Keep the TOC in view while scrolling. Let readers collapse it. Highlight the active section as they scroll. Close hides it for the visit.</p>
+      </article>
+      <article class="card">
+        <span class="icon">◧</span>
+        <h3>Fixed left</h3>
+        <p>On a wide single post or page, the outline sits in an 18rem column of the main content. Archives and small screens leave it with the post.</p>
+      </article>
+      <article class="card">
+        <span class="icon">▣</span>
+        <h3>Focused reading</h3>
+        <p>Focus sets the post on a paper sheet. <strong>Show page</strong>, <strong>Bring the rest back</strong>, or Escape restores the page.</p>
       </article>
       <article class="card">
         <span class="icon">🌐</span>
         <h3>Auto-insert sitewide</h3>
-        <p>Generate the TOC at the top of content or after the first heading across all posts — no per-post editing needed.</p>
+        <p>Generate the TOC at the top of content, after the first heading, or Fixed left on a wide single post or page.</p>
       </article>
       <article class="card">
         <span class="icon">📝</span>
@@ -291,7 +311,7 @@
         <span class="g-icon">↩</span>
         <div>
           <h3>Resume bookmark</h3>
-          <p>TOCguide remembers the last heading the reader reached and offers a ↩ Resume button on the next visit. Enable with <code>bookmark="1"</code>.</p>
+          <p>TOCguide stores the last heading in <code>localStorage</code> as <code>tocguide-bm-{postId}</code>. The ↩ Resume button stays hidden until that heading is in the current post. Enable with <code>bookmark="1"</code>.</p>
         </div>
       </div>
       <div class="guide-card">
@@ -401,6 +421,9 @@
         <tr><td>Hide markers, two columns, compact, underline</td><td>Layout adjustments</td></tr>
         <tr><td>Max height</td><td>Scroll within the TOC when list overflows</td></tr>
         <tr><td>Sticky</td><td>Keeps the TOC fixed as the page scrolls</td></tr>
+        <tr><td>Fixed left</td><td>On a wide single post or page, an 18rem column of the main content. Archives and small screens leave it with the content</td></tr>
+        <tr><td>Close button</td><td>Hides the outline for that visit. Show outline brings it back</td></tr>
+        <tr><td>Focused reading</td><td>Paper sheet of the post. Show page or Escape restores the page</td></tr>
         <tr><td>Collapsible / start collapsed</td><td>Reader-controlled toggle</td></tr>
         <tr><td>Highlight active heading</td><td>Scroll-spy marks the section currently in view</td></tr>
         <tr><td>Smooth scroll / offset override</td><td>Per-block override of the site-wide setting</td></tr>
@@ -423,7 +446,8 @@
         <tr><td>Scroll offset (px)</td><td>Space to leave under a sticky admin bar or theme header</td></tr>
         <tr><td>Highlight active heading</td><td>Site-wide default for the scroll-spy feature</td></tr>
         <tr><td>Minimum headings</td><td>Hide the TOC when a post has fewer matching headings</td></tr>
-        <tr><td>Auto-generate position</td><td>Off · Top of content · After first heading — sitewide</td></tr>
+        <tr><td>Auto-generate position</td><td>Off · Top of content · After first heading · Fixed left</td></tr>
+        <tr><td>Design</td><td>Style, colours, type, and spacing. The preview updates as you edit</td></tr>
         <tr><td>Post types</td><td>Which post types get the auto-generated TOC</td></tr>
         <tr><td>Auto TOC: title, style, layout, heading levels</td><td>Defaults for the auto-generated block</td></tr>
         <tr><td>Schema markup (JSON-LD)</td><td>ItemList structured data — off by default, safe with Yoast and Rank Math</td></tr>
@@ -497,7 +521,7 @@
     <ol style="font-size:18px;line-height:1.8;padding-left:1.4rem">
       <li>Install and activate from <a href="https://github.com/matthummel-pa/tocguide/releases/latest">tocguide.zip</a> or <strong>Plugins → Add New</strong> (search <em>TOCguide</em>).</li>
       <li>Edit a post with Heading blocks. Insert the <strong>Table of Contents</strong> block.</li>
-      <li>Optionally open <strong>Settings → TOCguide</strong> in wp-admin for site-wide auto-insert, scroll offset, and defaults.</li>
+      <li>Optionally open <strong>Settings → TOCguide</strong> for auto-insert (including Fixed left), the Design tab, scroll offset, and defaults.</li>
     </ol>
     <p style="color:var(--muted)"><strong>Skip a heading:</strong> Add CSS class <code>no-toc</code> or <code>tocguide-skip</code> to any Heading block (Advanced → Additional CSS class(es)).</p>
     <p style="color:var(--muted)"><strong>Enable Reading Guide:</strong> Open the block sidebar → Reading Guide panel → toggle <em>Hover section preview</em> or <em>Full Reading Guide</em>.</p>
@@ -511,7 +535,7 @@
 
     <details>
       <summary>Does it work with the Classic Editor?</summary>
-      <p>Yes — use the <code>[tocguide]</code> shortcode in classic post content, text widgets, or theme templates via <code>do_shortcode('[tocguide]')</code>.</p>
+      <p>Yes — use the <code>[tocguide]</code> shortcode in classic post content, text widgets, or theme templates via <code>do_shortcode('[tocguide]')</code>. Attributes include <code>close</code>, <code>focus</code>, <code>fixed</code>, <code>theme</code> (<code>inherit</code>, <code>exclude</code>, <code>include</code>), and <code>export</code>. The full list is in the <a href="documentation.html#shortcode">shortcode docs</a>.</p>
     </details>
     <details>
       <summary>Will it conflict with my Yoast / Rank Math schema?</summary>
@@ -536,6 +560,14 @@
     <details>
       <summary>Can I use it in a Full Site Editor template?</summary>
       <p>Yes. Insert the block in a template using the Template Editor. Auto-insert mode works across any registered public post type.</p>
+    </details>
+    <details>
+      <summary>Where does Fixed left put the outline?</summary>
+      <p>On a wide screen, a single post or page keeps the outline in an 18rem column of the main content. The header and the rest of the page stay put. On a small screen, and on blog or archive pages, the outline stays with the post.</p>
+    </details>
+    <details>
+      <summary>How do I leave focused reading?</summary>
+      <p>Click <strong>Show page</strong> (it also says <strong>Bring the rest back</strong>) or press Escape. That restores the header, sidebar, footer, and outline.</p>
     </details>
     <details>
       <summary>Where do I put the block?</summary>
