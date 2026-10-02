@@ -2,6 +2,8 @@
 
 Context file for Claude (Cowork / Claude Code) working on this project.
 
+Rules: `.cursor/rules/*.mdc` is the source of truth (Cursor). `sync-rules` (wp-dev-kit) mirrors them into `.claude/rules/`, which Claude Code loads automatically. Edit the `.mdc`, then run `sync-rules`.
+
 ## What this is
 A single-purpose WordPress block plugin: a **Table of Contents** block that
 auto-generates a linked outline from a post's headings. Built as ONE focused
