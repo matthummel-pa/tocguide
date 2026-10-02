@@ -212,6 +212,7 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 2. Settings → TOCguide: auto-insert, design tokens, study tools, accessibility.
 3. Block sidebar in the editor (heading levels, layout, Reading Guide).
 4. Docs & Support tab in wp-admin (links to the documentation site).
+5. Settings → TOCguide → Design: colours, fonts, markers, and the live outline preview.
 
 == Changelog ==
 

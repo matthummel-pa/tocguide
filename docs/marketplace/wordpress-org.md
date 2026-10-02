@@ -35,14 +35,44 @@ Follow the Plugin Developer FAQ and the 18 guidelines as product requirements:
 >
 > Thank you.
 
-## SVN assets (after approval)
+## SVN (after approval)
 
-Upload from `.wordpress-org/` to `assets/` in SVN (not inside the plugin folder):
+WordPress.org SVN is the release repository. Develop in git. Push SVN once, when a version is ready to ship. Every commit rebuilds the download zips.
 
-- `banner-1544x500.png` / `banner-772x250.png` (generated from `banner.svg`)
+Handbook: [Using Subversion](https://developer.wordpress.org/plugins/wordpress-org/how-to-use-subversion/).
+
+The repository is `https://plugins.svn.wordpress.org/tocguide`. Three directories matter:
+
+| Path | What goes there |
+| --- | --- |
+| `trunk/` | Plugin code. `tocguide.php` and `readme.txt` sit at the trunk root. A nested `trunk/tocguide/` breaks the download. |
+| `tags/<stable tag>/` | A copy of trunk for that release. Create it with `svn cp`, not a plain file copy. `Stable tag` in trunk `readme.txt` must match this folder name. |
+| `assets/` | Directory page artwork only (banners, icon, screenshots). Not inside the plugin zip. |
+
+`npm run package:svn` builds the block, then writes `dist/svn/trunk/` from the same `package.json` `files` list as `plugin-zip`, and renders `dist/svn/assets/` from `.wordpress-org/*.svg`. Screenshot files in `.wordpress-org/` or `.wordpress-org/screenshots/` are copied into `assets/`. The script refuses a version mismatch, a `Stable tag` of `trunk`, a short description over 150 characters, zip files, and `node_modules`.
+
+`tags/1.5.0` is already published. The next commit ships the current Stable tag (1.6.2). Refresh the existing checkout. Do not delete a published tag.
+
+```bash
+svn co https://plugins.svn.wordpress.org/tocguide svn-tocguide
+npm run package:svn -- --into svn-tocguide
+cd svn-tocguide
+svn status
+svn ci -m "Tagging version 1.6.2"
+```
+
+`--into` copies trunk and assets into the checkout, `svn add`s them, sets `svn:mime-type` on images, and runs `svn cp trunk tags/<stable tag>`. It does not commit. Review `svn status` first. Running it again before that commit refreshes an uncommitted tag so it matches trunk. A tag already published in SVN is left alone. The username is the WordPress.org account name (case-sensitive). If commit returns “Access forbidden”, pass `--username` and the SVN password from https://profiles.wordpress.org/me/profile/edit/group/3/?screen=svn-password
+
+Later releases: bump the version (see `docs/DEVELOPER_SOP.md`), set `Stable tag` to that version, run the same `--into` command, then commit.
+
+Directory artwork comes from `.wordpress-org/` and is written only to SVN `assets/`:
+
+- `banner-1544x500.png` / `banner-772x250.png`
 - `icon-256x256.png` / `icon-128x128.png` / `icon.svg`
 
-Banners and the icon are in `.wordpress-org/` already. To regenerate PNGs: `npm install --no-save @resvg/resvg-js && node scripts/rasterize-wporg-assets.js`.
+Screenshots named in `readme.txt` (`screenshot-1.png` …) belong in `.wordpress-org/screenshots/` so the packager can copy them to SVN `assets/`.
+
+To regenerate the PNGs in `.wordpress-org/` without packaging: `npm install --no-save @resvg/resvg-js && node scripts/rasterize-wporg-assets.js`.
 
 ## Review hot spots this plugin already avoids
 
