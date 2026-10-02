@@ -83,7 +83,9 @@ Match [Gutenberg block coding](https://developer.wordpress.org/block-editor/gett
 - [ ] Block inserts, live-previews headings, saves
 - [ ] Front-end links hit the right `id` (including custom anchors)
 - [ ] Level toggles, presets, collapse, sticky
-- [ ] `[tocguide]` and auto-insert (and *not* duplicating when the block is present)
+- [ ] `[tocguide]` and auto-insert (including Fixed left: wide singular dock, inline on archives and small screens)
+- [ ] Focus: Show page and Escape restore the page
+- [ ] A post that already has the block or shortcode is left alone by auto-insert
 - [ ] Duplicate heading text → unique slugs
 - [ ] `WP_DEBUG` is quiet
 

@@ -41,7 +41,7 @@ Block Directory (those cannot have wp-admin UI).
 - Front-end JS is `src/view.js` via `block.json` `viewScript`.
 - **Typography:** bold sans-serif only (Outfit / system UI). Never serif.
   See `.cursor/rules/brand-typography.mdc`. The front-end TOC block
-  inherits the theme; do not inject a branded (or serif) font there.
+  inherits the theme. Focus paper uses `"Segoe UI", system-ui, sans-serif`.
 
 ## How it works
 1. `TOCguide_Headings::get_all()` parses the post with `parse_blocks()` and builds
@@ -51,10 +51,22 @@ Block Directory (those cannot have wp-admin UI).
 3. A `render_block` filter injects matching `id` attributes with
    `WP_HTML_Tag_Processor`. Both sides use the same map.
 4. Settings (`tocguide_settings`) control smooth-scroll offset, auto-generate
-   of the Gutenberg block, schema, and uninstall cleanup.
+   (top, after the first heading, or Fixed left), the Design tab, schema,
+   and uninstall cleanup. The Design preview updates as you edit.
 5. Auto-generate calls `WP_Block::render()` with settings as block attributes.
    `[tocguide]` still maps to the same `render_nav()` output for classic content.
+   Shortcode attributes include `close`, `focus`, `fixed`, `theme`
+   (`inherit` / `exclude` / `include`), and `export`.
    View assets enqueue when the block, shortcode, or auto-generate is in use.
+6. Fixed left (`is-fixed-left`) docks on a singular view at `min-width: 1100px`
+   into an 18rem column of `main` (or `article`). Archives and narrower
+   screens leave the outline inline. The header stays put.
+7. Focus sets `html.tocguide-is-focusing`, hides surrounding chrome, and
+   styles the post as a paper card. `#tocguide-focus-exit` (**Show page** /
+   **Bring the rest back** / Escape) restores the page.
+8. Resume stores `tocguide-bm-{postId}` in `localStorage` via
+   IntersectionObserver and shows the button only when that heading is in
+   the current outline.
 
 ## File map
 - `tocguide.php` — headers, constants, boot.
@@ -68,8 +80,9 @@ Block Directory (those cannot have wp-admin UI).
 - `.wordpress-org/` — directory banner/icon assets (PNG + SVG).
 
 ## Roadmap
-**Free (this repo, v1.0):** block + shortcode + auto-insert, presets, collapse,
-sticky, scroll-spy, offset, schema opt-in, admin support pages.
+**Free (this repo):** block, shortcode, auto-insert (including Fixed left on a
+wide single post or page), presets, collapse, close, Focus, sticky, scroll-spy,
+Design settings with a live preview, offset, schema opt-in, admin support pages.
 
 **Later / Pro ideas:** extra numbering styles, per-heading include/exclude UI,
 site-editor pattern library, premium presets. Do not cripple the free plugin
