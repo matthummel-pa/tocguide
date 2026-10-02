@@ -25,10 +25,12 @@ TOCguide adds a Table of Contents block to the WordPress block editor. It is an 
 * Smooth scroll with a configurable offset for sticky headers
 * Collapsible outline and optional sticky positioning
 * Close button hides the outline for the visit; Show outline brings it back
-* Optional Focus control clears the page so only the post copy remains, on a plain sheet
+* Optional Focus control clears the page so only the post copy remains, on a plain sheet. Show page, or Escape, brings the rest of the page back
+* Fixed left, on a wide single post or page, keeps the outline in a left column of the main content. The header and the rest of the page stay put. Archives and small screens leave the outline with the content
+* Settings → TOCguide → Design sets the style, colours, type size, and spacing. The preview updates as you edit
 * Scroll-spy highlights the section currently in view
 * Hide bullets, two-column layout, compact spacing, max height with scroll
-* Auto-generate the block sitewide (top of content or after first heading)
+* Auto-generate the block sitewide: top of content, after the first heading, or Fixed left
 * `[tocguide]` shortcode for classic content and theme templates
 * Skip a heading with the CSS class `no-toc`
 * Accessible `<nav>` landmark with ARIA labels
@@ -87,13 +89,13 @@ TOCguide does not print a “powered by” or credit link on published posts.
 1. Edit a post that contains Heading blocks.
 2. Insert the **Table of Contents** block (typically after the introduction).
 3. Optionally open the **Reading Guide** panel in the block sidebar to enable any of the reading companion features.
-4. Open **Settings → TOCguide** to auto-generate the block sitewide or set a scroll offset.
+4. Open **Settings → TOCguide** to auto-generate the block, choose Fixed left, set colours and type, or set a scroll offset.
 
 = Shortcode =
 
 `[tocguide]`
 
-Layout & behavior: `title`, `showtitle`, `titletag`, `h1`–`h6`, `ordered`, `numbering`, `markers`, `collapsible`, `collapsed`, `sticky`, `compact`, `columns`, `underline`, `highlight`, `maxheight`, `min`, `smooth`, `style`.
+Layout & behavior: `title`, `showtitle`, `titletag`, `h1`–`h6`, `ordered`, `numbering`, `markers`, `collapsible`, `collapsed`, `close`, `focus`, `sticky`, `fixed`, `compact`, `columns`, `underline`, `highlight`, `maxheight`, `min`, `smooth`, `style`, `theme`, `export`. `fixed="1"` keeps the outline in a left column on a wide single post or page.
 
 Reading Guide: `preview="1"` (hover tooltip on links), `guide="1"` (full Reading Guide mode), `previews="1"`, `density="1"`, `readtime="1"`, `progress="1"`, `reactions="1"`, `citations="1"`, `citation="apa|mla|chicago|harvard|plain"`.
 
@@ -169,6 +171,10 @@ Each reader's choices are stored in their browser's `localStorage`. Nothing is s
 = How are citations generated? =
 
 Citations are built from data already in WordPress: the post author's display name, post title, blog name, published date, and permalink. The § button constructs the formatted string in JavaScript and copies it to the clipboard. The citation includes the section anchor (`#slug`) so it links directly to that section.
+
+= Where does Fixed left put the outline? =
+
+On a wide screen, a single post or page keeps the outline in a left column of the main content. The header and the rest of the page stay put. On a small screen, and on blog or archive pages, the outline stays with the post.
 
 = Can I hide the TOC on short posts? =
 
@@ -288,81 +294,12 @@ Deactivate leaves settings in place. Delete runs `uninstall.php`, which removes 
 * GitHub repository: `matthummel-pa/tocguide`.
 * Breaking: re-insert the block and re-save Settings if you used an earlier zip. No automatic migration of old keys.
 
-= 1.4.0 =
-* Rebrand for WordPress.org guideline 17: display name is now TOCguide and the plugin slug / text domain / main file are `tocguide`. Not affiliated with any other product.
-* Shortcode `[tocguide]`.
-* Existing blocks, CSS classes, and settings keys stayed on the previous identifier so current content kept working.
-
-= 1.3.3 =
-* Fix: `$guide_attrs` array was re-initialized to empty on the line after `data-tocguide-focus` was written to it — the accessibility focus-ring attribute was always discarded. Moved array init before the focus-style assignment.
-* Fix: global background and font custom properties (`--tocguide-bg`, `--tocguide-color`, `--tocguide-link-color`, etc.) now correctly propagate to the `<nav>` style attribute for both the block and shortcode/auto-insert rendering paths.
-
-= 1.3.2 =
-* Fix: short description in `readme.txt` trimmed from 175 to 145 characters — WordPress.org parser silently truncates anything over 150 characters.
-
-= 1.3.1 =
-* Fix: escape `$swatch_val` at the point of `printf()` output in the admin colour-picker widget — resolves `WordPress.Security.EscapeOutput` PHPCS error flagged by WordPress.org reviewers.
-* Fix: added missing PHPDoc block for `TOCguide_Settings::sanitize()`.
-* Fix: inline comment casing and full-stop in `class-tocguide-plugin.php` to satisfy PHPCS `Squiz.Commenting.InlineComment`.
-* Chore: PHPCBF auto-fixed 181 array-alignment warnings across `class-tocguide-settings.php`, `class-tocguide-plugin.php`, and `class-tocguide-headings.php`.
-
-= 1.3.0 =
-* New: **Design & Appearance** section in Settings → TOCguide — set global background, text, link, and border colours; font size, weight, and line height; border width / style / radius; and padding. All values are applied as CSS custom properties so block-editor per-instance overrides still win.
-* New: **Reading Guide & Study Tools** section in settings — configure global defaults for hover section preview, guide mode, density bars, read time, progress fade, emoji reactions, and academic citations.
-* New: **Study Tools & Export** section in settings — global defaults for reading progress bar, resume bookmark, reader note pads, and export toolbar.
-* New: **Accessibility** section in settings — choose focus ring style: Default, Bold (3 px, WCAG AA), or High-contrast (yellow background, WCAG AAA).
-* New: Admin JS syncs hex colour text inputs with companion colour swatches and toggles guide-mode sub-options conditionally.
-* Fix: CSS preset styles (minimal, boxed, underline, card) correctly override global design custom properties.
-
-= 1.2.2 =
-* Fix: `TOCGUIDE_VERSION` constant was stuck at `1.2.0`; now reads `1.2.2` correctly (admin version badge and `Version %s` string now match the plugin header).
-* Fix: `Tested up to` updated from 6.7 to 7.1 (WordPress 7.1 "Mary Lou", released 2026-08-19).
-* Fix: removed third-party trademark `elementor` from tags; replaced with `study tools`.
-* Fix: PHP coding-standards indentation in shortcode attribute registration and admin settings view.
-
-= 1.2.1 =
-* Fix: debounced resume-bookmark localStorage writes from every IntersectionObserver callback to every 500 ms, preventing redundant writes during fast scrolling.
-* Docs: completed v1.1.0 CHANGELOG entry (hover preview, export/print toolbar, full accessibility and page-builder details).
-* Docs: added "What's new" tables and "Performance" section to README for reviewers.
-
-= 1.2.0 =
-* New: **Reader note pads** — a 📝 button per section lets readers jot personal notes stored privately in localStorage. No account, no server. Enable with `rnotes="1"` in the shortcode or the new "Reader note pads" toggle in the block sidebar.
-* New: **Reading progress bar** — a thin animated bar shows 0–100 % of the document read (based on headings scrolled past via IntersectionObserver). Enable with `rprogress="1"`.
-* New: **Resume reading bookmark** — automatically bookmarks the last-read heading in localStorage; shows a "↩ Resume" button on return visits. Enable with `bookmark="1"`.
-* New: **Section Planner** — the "Section Notes" sidebar panel is now "Section Planner" with per-heading writing status (✏️ Draft / 🔄 In progress / ✅ Done) tracked in the editor canvas and a reader-facing teaser note.
-* New: **Total read-time badge** — when Reading Guide + read-time are active, the TOC header shows the aggregated total read time for the entire post.
-* New shortcode attributes: `rprogress`, `bookmark`, `rnotes`.
-* New block attributes: `showReaderNotes`, `showReadingProgress`, `showBookmark`, `sectionStatus`.
-
-= 1.1.0 =
-* New: **Reading Guide mode** — enable per-block to show section content previews (server-extracted, no JS fetch), visual content-density bars, per-section read-time estimates, and scroll-based reading progress.
-* New: **Author section notes** — type a teaser or hook per heading in the block sidebar (Section Notes panel); readers reveal it with a ✍ button.
-* New: **Emoji reactions** — readers react per section (💡 ⭐ 🤔 ✅) with state stored in localStorage; no accounts, no server calls.
-* New: **Per-section academic citations** — § button copies APA, MLA, Chicago, Harvard, or plain-link citation built from WordPress post meta; no external API.
-* New: **Hover section preview** — floating tooltip on TOC link hover/focus; viewport-aware positioning; `aria-describedby` for screen readers.
-* Compatibility: **Elementor** — heading data extracted from `_elementor_data` widget JSON; IDs injected into rendered output via `the_content` at priority 999.
-* Compatibility: **Bricks Builder** — heading and rich-text elements parsed from `_bricks_page_content_2` meta.
-* Compatibility: **Divi, WPBakery, Oxygen, Beaver Builder, Breakdance** — HTML-based heading scan as a generic fallback; IDs injected into rendered HTML so all builder-generated headings are reachable from TOC links.
-* New block attributes: `guideMode`, `showPreviews`, `showDensity`, `showReadTime`, `trackProgress`, `showReactions`, `showCitations`, `citationStyle`, `sectionNotes`, `previewOnHover`.
-* Block internals: `TOCguide_Headings::get_sections()` (word count + preview extraction), `citation_meta()`, `get_all_from_html()`, `get_all_from_elementor()`, `get_all_from_bricks()`, `inject_ids_in_html()`; updated `render_list()` and `render_nav()`.
-
-= 1.0.2 =
-* Removed `load_plugin_textdomain()` — WordPress.org directory auto-loads the `tocguide` text domain since WP 4.6.
-* Prefixed template and uninstall variables with `tocguide_`.
-* `Tested up to` 6.7.
-
-= 1.0.1 =
-* First installable GitHub zip of the 1.0 feature set (build + plugin-zip on tag).
-* Docs site, 100% GPLv2-or-later packaging, translation template, and WordPress.org banner/icon assets.
-
-= 1.0.0 =
-* Live editor preview, style presets, collapse, sticky, and scroll-spy.
-* Smooth scroll with offset; H5/H6 support.
-* Auto-generate the Gutenberg block, `[tocguide]` shortcode, skip class `no-toc`.
-* Settings and Docs & Support admin screens.
-* Heading IDs via WP_HTML_Tag_Processor; custom anchors respected.
+Older releases are in the GitHub changelog: https://github.com/matthummel-pa/tocguide/blob/main/CHANGELOG.md
 
 == Upgrade Notice ==
+
+= 1.6.15 =
+Fixed left stays with the post on blog and archive pages. On a single post or page, wide screens still keep the outline in a left column of the main content.
 
 = 1.6.13 =
 Show page is easier to find in focused reading. Click it or press Escape to restore the rest of the page.
@@ -372,36 +309,6 @@ Focused reading now keeps a Show page control. Press Escape or click it to resto
 
 = 1.5.0 =
 One `tocguide` identity for PHP, CSS, the block, shortcode, and settings. Re-insert the Table of Contents block and re-save Settings if you used an earlier zip.
-
-= 1.4.0 =
-Display name and WordPress.org slug are now TOCguide / tocguide so the listing is clearly independent. Existing blocks and CSS from that release kept working.
-
-= 1.3.3 =
-Bug fix: custom background and font colours set in Settings → TOCguide now display correctly. The accessibility focus-ring setting also now applies as intended.
-
-= 1.3.2 =
-Readme-only fix: short description trimmed to satisfy the WordPress.org 150-character parser limit.
-
-= 1.3.1 =
-Security/code-quality fix: escaping error in the settings colour-picker widget resolved. No functional changes.
-
-= 1.3.0 =
-Major settings expansion: global design customization (colours, typography, borders), Reading Guide & Study Tools defaults, and a new Accessibility section for focus ring styles. No changes to existing block output.
-
-= 1.2.2 =
-WordPress.org compliance fixes: corrects the in-admin version badge, updates "Tested up to" to 7.1, and removes a disallowed trademark tag. No functional changes.
-
-= 1.2.1 =
-Performance fix for the resume bookmark feature (debounced localStorage writes). Documentation updates only — no functional changes to the block, shortcode, or settings.
-
-= 1.2.0 =
-Adds study-assistant features: reader note pads, a reading progress bar, resume bookmark, Section Planner writing status, and a total read-time badge. No breaking changes — all new features are opt-in via the block sidebar or shortcode.
-
-= 1.1.0 =
-Adds Reading Guide mode: section previews, density bars, read-time estimates, reading progress, author notes, emoji reactions, and per-section academic citations. No breaking changes — all new features are opt-in via the block sidebar.
-
-= 1.0.2 =
-Plugin Check and readme cleanup for the WordPress.org review. Same block, settings, and shortcode as 1.0.1.
 
 == License ==
 
