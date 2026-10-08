@@ -12,4 +12,7 @@
 /.cursor export-ignore
 /CLAUDE.md export-ignore
 /.github export-ignore
+/.claude export-ignore
+/.mcp.json export-ignore
+/.wp-review-allow export-ignore
 /docs/marketplace export-ignore
