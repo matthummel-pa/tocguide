@@ -74,3 +74,9 @@ sticky, scroll-spy, offset, schema opt-in, admin support pages.
 **Later / Pro ideas:** extra numbering styles, per-heading include/exclude UI,
 site-editor pattern library, premium presets. Do not cripple the free plugin
 to upsell — WordPress.org and Envato both reject that.
+
+## Cursor Cloud specific instructions
+
+Standards come from the Cursor playbook plugin (matthummel-pa/ai-dev-standards-playbook). Do not copy those rules into this repo. When a playbook rule and a project rule disagree, follow this repo for the text domain, local commands, target size, theme switch, and deploy.
+
+The Build runs the playbook `cloud-install.sh`, then `composer install` and `npm ci`. Studio is not on the image. Run the checks this repo already documents. Do not install WordPress unless the task asks. The facts above stay in force.
